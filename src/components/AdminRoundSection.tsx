@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { Database } from '@/types/database'
 import { useMatches } from '@/hooks/useMatches'
 import { usePredictions } from '@/hooks/usePredictions'
-import { useUpdateRound } from '@/hooks/useAdmin'
+import { useUpdateRound, useDeleteRound } from '@/hooks/useAdmin'
 import { AdminMatchRow } from '@/components/AdminMatchRow'
 import { AdminAddMatch } from '@/components/AdminAddMatch'
 
@@ -17,7 +17,9 @@ export function AdminRoundSection({ round, tournamentId }: Props) {
   const { data: matches } = useMatches(round.id)
   const { data: predictions } = usePredictions(round.id)
   const updateRound = useUpdateRound()
+  const deleteRound = useDeleteRound()
   const [expanded, setExpanded] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
 
   const [editingDeadline, setEditingDeadline] = useState(false)
   const [deadlineValue, setDeadlineValue] = useState('')
@@ -93,6 +95,30 @@ export function AdminRoundSection({ round, tournamentId }: Props) {
             >
               {round.is_locked ? 'Entsperren' : 'Sperren'}
             </button>
+            <div className="ml-auto">
+              {confirmDelete ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-400">Wirklich löschen?</span>
+                  <button
+                    onClick={() => deleteRound.mutate({ id: round.id, tournamentId })}
+                    disabled={deleteRound.isPending}
+                    className="rounded bg-red-600/20 px-2 py-0.5 text-xs text-red-400 hover:bg-red-600/30 disabled:opacity-50"
+                  >
+                    Ja, löschen
+                  </button>
+                  <button onClick={() => setConfirmDelete(false)} className="text-xs text-gray-500 hover:text-gray-300">
+                    Abbrechen
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setConfirmDelete(true)}
+                  className="rounded px-2 py-0.5 text-xs text-gray-600 hover:bg-red-600/20 hover:text-red-400"
+                >
+                  Runde löschen
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="flex items-center gap-2 text-sm">

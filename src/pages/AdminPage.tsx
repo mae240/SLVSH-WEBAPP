@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAllTournaments } from '@/hooks/useTournaments'
-import { useCreateTournament } from '@/hooks/useAdmin'
+import { useCreateTournament, useDeleteTournament } from '@/hooks/useAdmin'
 import { useAuth } from '@/hooks/useAuth'
 import { tournamentSchema, type TournamentFormData } from '@/schemas/admin'
 
@@ -11,7 +11,9 @@ export function AdminPage() {
   const { user } = useAuth()
   const { data: tournaments, isLoading, error } = useAllTournaments()
   const createTournament = useCreateTournament()
+  const deleteTournament = useDeleteTournament()
   const [showForm, setShowForm] = useState(false)
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm<TournamentFormData>({
     resolver: zodResolver(tournamentSchema),
@@ -75,22 +77,47 @@ export function AdminPage() {
 
       <div className="space-y-3">
         {tournaments?.map((t) => (
-          <Link
-            key={t.id}
-            to={`/admin/tournament/${t.id}`}
-            className="block rounded-lg border border-gray-800 bg-gray-900 p-4 transition hover:border-gray-700"
-          >
+          <div key={t.id} className="rounded-lg border border-gray-800 bg-gray-900 p-4 transition hover:border-gray-700">
             <div className="flex items-center justify-between">
-              <span className="font-medium">{t.name}</span>
-              <span className={`rounded px-2 py-0.5 text-xs font-medium ${
-                t.status === 'active' ? 'bg-green-600/20 text-green-400'
-                : t.status === 'draft' ? 'bg-yellow-600/20 text-yellow-400'
-                : 'bg-gray-600/20 text-gray-400'
-              }`}>
-                {t.status}
-              </span>
+              <Link to={`/admin/tournament/${t.id}`} className="flex-1">
+                <div className="flex items-center gap-3">
+                  <span className="font-medium">{t.name}</span>
+                  <span className={`rounded px-2 py-0.5 text-xs font-medium ${
+                    t.status === 'active' ? 'bg-green-600/20 text-green-400'
+                    : t.status === 'draft' ? 'bg-yellow-600/20 text-yellow-400'
+                    : 'bg-gray-600/20 text-gray-400'
+                  }`}>
+                    {t.status}
+                  </span>
+                </div>
+              </Link>
+              {confirmDeleteId === t.id ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-400">Wirklich löschen?</span>
+                  <button
+                    onClick={async () => { await deleteTournament.mutateAsync(t.id); setConfirmDeleteId(null) }}
+                    disabled={deleteTournament.isPending}
+                    className="rounded bg-red-600/20 px-2 py-0.5 text-xs text-red-400 hover:bg-red-600/30 disabled:opacity-50"
+                  >
+                    Ja, löschen
+                  </button>
+                  <button
+                    onClick={() => setConfirmDeleteId(null)}
+                    className="text-xs text-gray-500 hover:text-gray-300"
+                  >
+                    Abbrechen
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setConfirmDeleteId(t.id)}
+                  className="rounded px-2 py-0.5 text-xs text-gray-600 hover:bg-red-600/20 hover:text-red-400"
+                >
+                  Löschen
+                </button>
+              )}
             </div>
-          </Link>
+          </div>
         ))}
         {!tournaments?.length && <p className="text-gray-400">Noch keine Turniere.</p>}
       </div>

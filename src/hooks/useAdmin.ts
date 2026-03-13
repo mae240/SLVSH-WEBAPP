@@ -136,6 +136,43 @@ export function useUpdateMatch() {
   })
 }
 
+// ── Delete ──
+
+export function useDeleteTournament() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('tournaments').delete().eq('id', id)
+      if (error) throw error
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['tournaments'] }),
+  })
+}
+
+export function useDeleteRound() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ id, tournamentId }: { id: string; tournamentId: string }) => {
+      const { error } = await supabase.from('rounds').delete().eq('id', id)
+      if (error) throw error
+      return tournamentId
+    },
+    onSuccess: (_d, v) => qc.invalidateQueries({ queryKey: ['rounds', v.tournamentId] }),
+  })
+}
+
+export function useDeleteMatch() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ id, roundId }: { id: string; roundId: string }) => {
+      const { error } = await supabase.from('matches').delete().eq('id', id)
+      if (error) throw error
+      return roundId
+    },
+    onSuccess: (_d, v) => qc.invalidateQueries({ queryKey: ['matches', v.roundId] }),
+  })
+}
+
 // ── Admin Prediction Editing ──
 
 export function useAdminUpdatePrediction() {

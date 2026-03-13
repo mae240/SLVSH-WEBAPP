@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { Database } from '@/types/database'
 import { type PredictionWithProfile } from '@/hooks/usePredictions'
-import { useUpdateMatch, useAdminUpdatePrediction } from '@/hooks/useAdmin'
+import { useUpdateMatch, useAdminUpdatePrediction, useDeleteMatch } from '@/hooks/useAdmin'
 import { resultSchema, type ResultFormData } from '@/schemas/admin'
 import { allLettersOptions } from '@/schemas/prediction'
 import { lettersToDB, lettersToForm, lettersLabel } from '@/lib/letters'
@@ -83,7 +83,9 @@ function AdminPredictionRow({ prediction, match, roundId }: {
 export function AdminMatchRow({ match, predictions, roundId }: Props) {
   const [showResult, setShowResult] = useState(false)
   const [showPreds, setShowPreds] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
   const updateMatch = useUpdateMatch()
+  const deleteMatch = useDeleteMatch()
 
   const { register, handleSubmit, formState: { errors } } = useForm<ResultFormData>({
     resolver: zodResolver(resultSchema),
@@ -130,6 +132,28 @@ export function AdminMatchRow({ match, predictions, roundId }: Props) {
           >
             Tipps ({predictions.length})
           </button>
+          {confirmDelete ? (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-400">Löschen?</span>
+              <button
+                onClick={() => deleteMatch.mutate({ id: match.id, roundId })}
+                disabled={deleteMatch.isPending}
+                className="rounded bg-red-600/20 px-2 py-0.5 text-xs text-red-400 hover:bg-red-600/30 disabled:opacity-50"
+              >
+                Ja
+              </button>
+              <button onClick={() => setConfirmDelete(false)} className="text-xs text-gray-500 hover:text-gray-300">
+                Nein
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setConfirmDelete(true)}
+              className="rounded px-2 py-0.5 text-xs text-gray-600 hover:bg-red-600/20 hover:text-red-400"
+            >
+              Löschen
+            </button>
+          )}
         </div>
       </div>
 
