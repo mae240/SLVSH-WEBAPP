@@ -14,6 +14,7 @@ import { AdminPage } from '@/pages/AdminPage'
 import { AdminTournamentPage } from '@/pages/AdminTournamentPage'
 import { AdminPredictionsPage } from '@/pages/AdminPredictionsPage'
 import { AdminRoute } from '@/components/AdminRoute'
+import { SettingsPage } from '@/pages/SettingsPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 
 export default function App() {
@@ -29,6 +30,7 @@ export default function App() {
                 <Route path="tournament/:slug" element={<TournamentPage />} />
                 <Route path="tournament/:slug/round/:roundId" element={<RoundPage />} />
                 <Route path="tournament/:slug/leaderboard" element={<LeaderboardPage />} />
+                <Route path="settings" element={<SettingsPage />} />
                 <Route element={<AdminRoute />}>
                   <Route path="admin" element={<AdminPage />} />
                   <Route path="admin/tournament/:tournamentId" element={<AdminTournamentPage />} />
