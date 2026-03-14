@@ -6,9 +6,14 @@ export default {
     extend: {
       colors: {
         brand: {
-          DEFAULT: '#3b82f6',
-          dark: '#2563eb',
+          DEFAULT: '#22c55e',
+          dark: '#16a34a',
+          light: '#4ade80',
+          dim: '#22c55e20',
         },
+      },
+      fontFamily: {
+        mono: ['"JetBrains Mono"', '"Fira Code"', 'monospace'],
       },
     },
   },

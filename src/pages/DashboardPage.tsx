@@ -7,48 +7,45 @@ export function DashboardPage() {
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-600 border-t-blue-500" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-800 border-t-brand" />
       </div>
     )
   }
 
   if (error) {
-    return <p className="text-red-400">Fehler beim Laden der Turniere.</p>
-  }
-
-  if (!tournaments?.length) {
-    return (
-      <div className="space-y-4">
-        <h1 className="text-2xl font-bold">Turniere</h1>
-        <p className="text-gray-400">Noch keine Turniere vorhanden.</p>
-      </div>
-    )
+    return <p className="text-red-400">Failed to load tournaments.</p>
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Turniere</h1>
-      <div className="grid gap-4 sm:grid-cols-2">
-        {tournaments.map((t) => (
-          <Link
-            key={t.id}
-            to={`/tournament/${t.slug}`}
-            className="rounded-lg border border-gray-800 bg-gray-900 p-4 transition hover:border-gray-700"
-          >
-            <h2 className="text-lg font-semibold">{t.name}</h2>
-            {t.description && (
-              <p className="mt-1 text-sm text-gray-400">{t.description}</p>
-            )}
-            <span className={`mt-2 inline-block rounded px-2 py-0.5 text-xs font-medium ${
-              t.status === 'active'
-                ? 'bg-green-600/20 text-green-400'
-                : 'bg-gray-600/20 text-gray-400'
-            }`}>
-              {t.status === 'active' ? 'Aktiv' : 'Beendet'}
-            </span>
-          </Link>
-        ))}
+    <div className="space-y-8">
+      <div className="text-center space-y-4">
+        <img src="/logo.png" alt="SLVSH Bets" className="mx-auto w-full max-w-[280px] drop-shadow-[0_0_20px_rgba(34,197,94,0.25)]" />
+        <h1 className="text-2xl font-bold tracking-tight">Tournaments</h1>
       </div>
+
+      {!tournaments?.length ? (
+        <p className="text-center text-gray-600">No tournaments yet.</p>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2">
+          {tournaments.map((t) => (
+            <Link
+              key={t.id}
+              to={`/tournament/${t.slug}`}
+              className="card group transition hover:border-brand/30"
+            >
+              <div className="flex items-center justify-between">
+                <h2 className="font-semibold group-hover:text-brand transition">{t.name}</h2>
+                <span className={t.status === 'active' ? 'badge-green' : 'badge-gray'}>
+                  {t.status === 'active' ? 'Live' : 'Finished'}
+                </span>
+              </div>
+              {t.description && (
+                <p className="mt-2 text-sm text-gray-600">{t.description}</p>
+              )}
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

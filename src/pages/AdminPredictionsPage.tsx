@@ -35,20 +35,20 @@ export function AdminPredictionsPage() {
   if (tLoading || rLoading) {
     return (
       <div className="flex justify-center py-12">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-600 border-t-blue-500" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-800 border-t-brand" />
       </div>
     )
   }
 
-  if (!tournament) return <p className="text-red-400">Turnier nicht gefunden.</p>
+  if (!tournament) return <p className="text-red-400">Tournament not found.</p>
 
   return (
     <div className="space-y-6">
       <div>
-        <Link to={`/admin/tournament/${tournament.id}`} className="text-sm text-gray-400 hover:text-gray-300">
+        <Link to={`/admin/tournament/${tournament.id}`} className="text-sm text-gray-600 hover:text-brand transition">
           &larr; {tournament.name}
         </Link>
-        <h1 className="mt-2 text-2xl font-bold">Alle Tipps verwalten</h1>
+        <h1 className="mt-2 text-2xl font-bold">Manage Predictions</h1>
       </div>
 
       {rounds?.map((round) => (
@@ -82,17 +82,17 @@ function RoundPredictions({ round, tournamentId }: {
   const [expanded, setExpanded] = useState(true)
 
   return (
-    <div className="rounded-lg border border-gray-800 bg-gray-900">
+    <div className="card !p-0 overflow-hidden">
       <button
         onClick={() => setExpanded(!expanded)}
         className="flex w-full items-center justify-between p-4 text-left"
       >
         <span className="font-medium">{round.name}</span>
-        <span className="text-gray-500">{expanded ? '▲' : '▼'}</span>
+        <span className="text-gray-600">{expanded ? '▲' : '▼'}</span>
       </button>
 
       {expanded && matches && predictions && allProfiles && (
-        <div className="border-t border-gray-800 p-4 space-y-4">
+        <div className="border-t border-gray-800/60 p-4 space-y-4">
           {allProfiles.map((profile) => (
             <UserPredictions
               key={profile.id}
@@ -123,25 +123,25 @@ function UserPredictions({ userId, displayName, matches, predictions, roundId, t
   const missingCount = matches.length - predictions.length
 
   return (
-    <div className="rounded border border-gray-700 bg-gray-800">
+    <div className="rounded-lg border border-gray-800/60 bg-black">
       <button
         onClick={() => setExpanded(!expanded)}
         className="flex w-full items-center justify-between px-3 py-2 text-left text-sm"
       >
         <span className="font-medium">{displayName}</span>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-500">{predictions.length}/{matches.length} Tipps</span>
+          <span className="text-xs text-gray-600">{predictions.length}/{matches.length} placed</span>
           {missingCount > 0 && (
-            <span className="rounded bg-yellow-600/20 px-1.5 py-0.5 text-[10px] text-yellow-400">
-              {missingCount} fehlt
+            <span className="badge-yellow text-[10px]">
+              {missingCount} missing
             </span>
           )}
-          <span className="text-gray-500 text-xs">{expanded ? '▲' : '▼'}</span>
+          <span className="text-gray-600 text-xs">{expanded ? '▲' : '▼'}</span>
         </div>
       </button>
 
       {expanded && (
-        <div className="border-t border-gray-700 px-3 py-2 space-y-1">
+        <div className="border-t border-gray-800/60 px-3 py-2 space-y-1">
           {matches.map((match) => {
             const pred = predByMatch.get(match.id)
             return (
@@ -204,10 +204,10 @@ function PredictionCell({ match, prediction, userId, roundId, tournamentId }: {
   if (!editing) {
     return (
       <div className="flex items-center justify-between text-xs">
-        <span className="text-gray-500">{matchLabel}</span>
+        <span className="text-gray-600">{matchLabel}</span>
         <div className="flex items-center gap-2">
           {prediction ? (
-            <span className="text-gray-300">
+            <span className="text-gray-400">
               {prediction.predicted_winner} ({lettersLabel(prediction.predicted_winner_letters)})
             </span>
           ) : (
@@ -215,9 +215,9 @@ function PredictionCell({ match, prediction, userId, roundId, tournamentId }: {
           )}
           <button
             onClick={() => setEditing(true)}
-            className="rounded bg-gray-700 px-1.5 py-0.5 text-[10px] text-gray-400 hover:bg-gray-600 hover:text-gray-200"
+            className="rounded-lg bg-gray-900 px-1.5 py-0.5 text-[10px] text-gray-500 hover:text-brand transition"
           >
-            {prediction ? 'Edit' : 'Neu'}
+            {prediction ? 'Edit' : 'New'}
           </button>
         </div>
       </div>
@@ -226,38 +226,19 @@ function PredictionCell({ match, prediction, userId, roundId, tournamentId }: {
 
   return (
     <div className="flex items-center justify-between gap-2 text-xs">
-      <span className="text-gray-500 shrink-0">{matchLabel}</span>
+      <span className="text-gray-600 shrink-0">{matchLabel}</span>
       <div className="flex items-center gap-1">
-        <select
-          value={winner}
-          onChange={(e) => setWinner(e.target.value)}
-          className="rounded border border-gray-600 bg-gray-900 px-1.5 py-0.5 text-xs"
-        >
+        <select value={winner} onChange={(e) => setWinner(e.target.value)} className="input !py-0.5 !px-1.5 !text-xs !w-auto">
           <option value={match.player_a}>{match.player_a}</option>
           <option value={match.player_b}>{match.player_b}</option>
         </select>
-        <select
-          value={letters}
-          onChange={(e) => setLetters(e.target.value)}
-          className="rounded border border-gray-600 bg-gray-900 px-1.5 py-0.5 text-xs"
-        >
+        <select value={letters} onChange={(e) => setLetters(e.target.value)} className="input !py-0.5 !px-1.5 !text-xs !w-auto">
           {allLettersOptions.map((l) => (
-            <option key={l} value={l}>{l === 'none' ? 'Keine' : l}</option>
+            <option key={l} value={l}>{l === 'none' ? 'Clean' : l}</option>
           ))}
         </select>
-        <button
-          onClick={handleSave}
-          disabled={isPending}
-          className="rounded bg-blue-600 px-1.5 py-0.5 text-[10px] font-medium text-white disabled:opacity-50"
-        >
-          OK
-        </button>
-        <button
-          onClick={() => setEditing(false)}
-          className="rounded bg-gray-700 px-1.5 py-0.5 text-[10px] text-gray-400 hover:bg-gray-600"
-        >
-          X
-        </button>
+        <button onClick={handleSave} disabled={isPending} className="btn-primary !px-1.5 !py-0.5 !text-[10px]">OK</button>
+        <button onClick={() => setEditing(false)} className="rounded-lg bg-gray-900 px-1.5 py-0.5 text-[10px] text-gray-500 hover:text-gray-300 transition">X</button>
       </div>
     </div>
   )

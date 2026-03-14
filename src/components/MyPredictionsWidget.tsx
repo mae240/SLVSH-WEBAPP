@@ -60,10 +60,10 @@ export function MyPredictionsWidget({ tournamentId, slug, rounds }: Props) {
   if (!user) return null
   if (predsLoading || matchesLoading) {
     return (
-      <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
-        <h2 className="text-lg font-semibold">Meine Tipps</h2>
+      <div className="card">
+        <h2 className="text-lg font-semibold">My Predictions</h2>
         <div className="mt-3 flex justify-center">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-600 border-t-blue-500" />
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-800 border-t-brand" />
         </div>
       </div>
     )
@@ -84,11 +84,11 @@ export function MyPredictionsWidget({ tournamentId, slug, rounds }: Props) {
   }
 
   return (
-    <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
-      <h2 className="text-lg font-semibold">Meine Tipps</h2>
+    <div className="card">
+      <h2 className="text-lg font-semibold">My Predictions</h2>
 
       {!rounds.length ? (
-        <p className="mt-2 text-sm text-gray-500">Noch keine Runden.</p>
+        <p className="mt-2 text-sm text-gray-600">No rounds yet.</p>
       ) : (
         <div className="mt-3 space-y-4">
           {rounds.map((round) => {
@@ -100,10 +100,8 @@ export function MyPredictionsWidget({ tournamentId, slug, rounds }: Props) {
               return (
                 <div key={round.id}>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-400">{round.name}</span>
-                    <span className="rounded bg-gray-600/20 px-2 py-0.5 text-xs text-gray-500">
-                      Vorbereitung
-                    </span>
+                    <span className="text-sm font-medium text-gray-500">{round.name}</span>
+                    <span className="badge-gray text-[10px]">Draft</span>
                   </div>
                 </div>
               )
@@ -118,36 +116,36 @@ export function MyPredictionsWidget({ tournamentId, slug, rounds }: Props) {
                 <div className="flex items-center justify-between">
                   <Link
                     to={`/tournament/${slug}/round/${round.id}`}
-                    className="text-sm font-medium text-blue-400 hover:text-blue-300"
+                    className="text-sm font-medium text-brand hover:text-brand-light transition"
                   >
                     {round.name}
                   </Link>
-                  <span className="text-xs text-gray-500">
-                    {tippCount}/{matchCount} getippt
+                  <span className="text-xs text-gray-600">
+                    {tippCount}/{matchCount} placed
                   </span>
                 </div>
 
                 {roundMatches.length === 0 ? (
-                  <p className="mt-1 text-xs text-gray-600">Noch keine Matches.</p>
+                  <p className="mt-1 text-xs text-gray-700">No matches yet.</p>
                 ) : (
                   <div className="mt-1 space-y-0.5">
                     {roundMatches.map((match) => {
                       const pred = predsMap.get(match.id)
                       return (
                         <div key={match.id} className="flex items-center justify-between text-xs">
-                          <span className="text-gray-400">
+                          <span className="text-gray-500">
                             {match.player_a} vs {match.player_b}
                           </span>
                           {pred ? (
-                            <span className="text-gray-300">
+                            <span className="text-gray-400">
                               {pred.predicted_winner}
                               {pred.predicted_winner_letters && (
-                                <span className="ml-1 text-gray-500">({pred.predicted_winner_letters})</span>
+                                <span className="ml-1 text-gray-600">({pred.predicted_winner_letters})</span>
                               )}
                             </span>
                           ) : (
-                            <span className="text-gray-600">
-                              {isOpen ? '— offen' : '—'}
+                            <span className="text-gray-700">
+                              {isOpen ? '— open' : '—'}
                             </span>
                           )}
                         </div>

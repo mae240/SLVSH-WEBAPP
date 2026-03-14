@@ -5,7 +5,7 @@ interface CountdownProps {
 }
 
 function formatTimeLeft(ms: number): string {
-  if (ms <= 0) return 'Abgelaufen'
+  if (ms <= 0) return 'Expired'
   const s = Math.floor(ms / 1000)
   const days = Math.floor(s / 86400)
   const hours = Math.floor((s % 86400) / 3600)
@@ -31,17 +31,17 @@ export function Countdown({ deadline }: CountdownProps) {
     return () => clearInterval(interval)
   }, [deadline, timeLeft <= 0])
 
-  const isUrgent = timeLeft > 0 && timeLeft < 3600_000 // < 1 hour
+  const isUrgent = timeLeft > 0 && timeLeft < 3600_000
 
   return (
-    <span className={`text-sm font-medium ${
+    <span className={`text-sm font-medium tabular-nums ${
       timeLeft <= 0
         ? 'text-red-400'
         : isUrgent
-          ? 'text-yellow-400'
-          : 'text-gray-400'
+          ? 'text-yellow-400 animate-pulse'
+          : 'text-brand'
     }`}>
-      Deadline: {formatTimeLeft(timeLeft)}
+      {formatTimeLeft(timeLeft)}
     </span>
   )
 }

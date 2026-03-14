@@ -19,13 +19,13 @@ export function RoundPage() {
   if (roundLoading || matchesLoading || predsLoading) {
     return (
       <div className="flex justify-center py-12">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-600 border-t-blue-500" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-800 border-t-brand" />
       </div>
     )
   }
 
   if (!round || !matches) {
-    return <p className="text-red-400">Runde nicht gefunden.</p>
+    return <p className="text-red-400">Round not found.</p>
   }
 
   const isPast = round.deadline_at ? new Date(round.deadline_at) <= new Date() : false
@@ -40,30 +40,31 @@ export function RoundPage() {
   return (
     <div className="space-y-6">
       <div>
-        <Link to={`/tournament/${slug}`} className="text-sm text-gray-400 hover:text-gray-300">
-          &larr; {tournament?.name ?? 'Zurück'}
+        <Link to={`/tournament/${slug}`} className="text-sm text-gray-600 hover:text-brand transition">
+          &larr; {tournament?.name ?? 'Back'}
         </Link>
         <h1 className="mt-2 text-2xl font-bold">{round.name}</h1>
 
         {canEdit && round.deadline_at && (
-          <div className="mt-2">
+          <div className="mt-2 flex items-center gap-2">
+            <span className="text-sm text-gray-600">Deadline in</span>
             <Countdown deadline={round.deadline_at} />
           </div>
         )}
 
         {!canEdit && (
-          <p className="mt-2 text-sm text-yellow-400">
+          <p className="mt-2 text-sm text-yellow-400/80">
             {isLocked
-              ? 'Runde ist gesperrt — keine Änderungen möglich.'
+              ? 'Round is locked — no changes allowed.'
               : !isOpen
-                ? 'Runde ist noch nicht freigegeben — Tipps können noch nicht abgegeben werden.'
-                : 'Deadline ist vorbei — keine Änderungen möglich.'}
+                ? 'Round is not open yet — predictions cannot be placed.'
+                : 'Deadline has passed — no changes allowed.'}
           </p>
         )}
       </div>
 
       {!matches.length ? (
-        <p className="text-gray-400">Noch keine Matches in dieser Runde.</p>
+        <p className="text-gray-600">No matches in this round yet.</p>
       ) : (
         <div className="space-y-4">
           {matches.map((match) => {

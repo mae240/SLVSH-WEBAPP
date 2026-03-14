@@ -19,8 +19,8 @@ export function LoginPage() {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-600 border-t-blue-500" />
+      <div className="flex h-screen items-center justify-center bg-black">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-800 border-t-brand" />
       </div>
     )
   }
@@ -34,49 +34,49 @@ export function LoginPage() {
     const { error } = await signIn(data.username, data.password)
     if (error) {
       setServerError(error.message === 'Invalid login credentials'
-        ? 'Falscher Benutzername oder Passwort'
+        ? 'Invalid username or password'
         : error.message)
     }
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
-      <div className="w-full max-w-sm space-y-6">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold tracking-tight">SLVSH Bets</h1>
-          <p className="mt-2 text-sm text-gray-400">Melde dich an, um deine Tipps abzugeben</p>
+    <div className="flex min-h-screen items-center justify-center px-4 bg-black">
+      <div className="w-full max-w-sm space-y-8">
+        <div className="text-center space-y-4">
+          <img src="/logo.png" alt="SLVSH Bets" className="mx-auto w-full max-w-xs drop-shadow-[0_0_30px_rgba(34,197,94,0.3)]" />
+          <p className="text-sm text-gray-600">Sign in to place your bets</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-300">
-              Benutzername
+            <label htmlFor="username" className="block text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Username
             </label>
             <input
               id="username"
               type="text"
               autoComplete="username"
               {...register('username')}
-              className="mt-1 block w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-gray-100 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="input mt-1"
             />
             {errors.username && (
-              <p className="mt-1 text-sm text-red-400">{errors.username.message}</p>
+              <p className="mt-1 text-xs text-red-400">{errors.username.message}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-300">
-              Passwort
+            <label htmlFor="password" className="block text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Password
             </label>
             <input
               id="password"
               type="password"
               autoComplete="current-password"
               {...register('password')}
-              className="mt-1 block w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-gray-100 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="input mt-1"
             />
             {errors.password && (
-              <p className="mt-1 text-sm text-red-400">{errors.password.message}</p>
+              <p className="mt-1 text-xs text-red-400">{errors.password.message}</p>
             )}
           </div>
 
@@ -87,9 +87,9 @@ export function LoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-950 disabled:opacity-50"
+            className="btn-primary w-full"
           >
-            {isSubmitting ? 'Anmelden…' : 'Anmelden'}
+            {isSubmitting ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
       </div>

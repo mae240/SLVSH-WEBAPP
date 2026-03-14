@@ -65,37 +65,35 @@ export function MatchPredictionCard({
     setIsEditing(false)
   }
 
-  // Build scored lookup: predictionId -> scored row
   const scoreMap = new Map<string, ScoredPrediction>()
   scoredPredictions?.forEach((sp) => scoreMap.set(sp.id, sp))
 
-  // All predictions for the table (my prediction first, then others)
   const allPredictions: PredictionWithProfile[] = []
   if (myPrediction) allPredictions.push(myPrediction)
   allPredictions.push(...otherPredictions)
 
   return (
-    <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
+    <div className="card">
       {/* Match header */}
       <div className="flex items-center justify-between">
         <h3 className="font-semibold">
-          <span className="text-gray-500">#{match.match_number}</span>{' '}
+          <span className="text-gray-600">#{match.match_number}</span>{' '}
           {match.player_a} vs {match.player_b}
         </h3>
         {match.is_finished && match.winner ? (
-          <span className="rounded bg-green-600/20 px-2 py-0.5 text-xs font-medium text-green-400">
+          <span className="badge-green">
             {match.winner} ({lettersLabel(match.winner_letters)})
           </span>
         ) : (
-          <span className="rounded bg-gray-700/50 px-2 py-0.5 text-xs text-gray-500">Offen</span>
+          <span className="badge-gray">Pending</span>
         )}
       </div>
 
-      {/* Prediction form (when editing or no prediction yet) */}
+      {/* Prediction form */}
       {showForm && (
-        <form onSubmit={handleSubmit(onSubmit)} className="mt-3 space-y-3">
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-4 space-y-3">
           <div>
-            <label className="mb-1 block text-sm text-gray-400">Gewinner</label>
+            <label className="mb-1.5 block text-xs font-medium text-gray-500 uppercase tracking-wider">Winner</label>
             <div className="flex gap-2">
               {[match.player_a, match.player_b].map((player) => (
                 <label key={player} className="flex-1">
@@ -105,19 +103,19 @@ export function MatchPredictionCard({
                     {...register('predicted_winner')}
                     className="peer sr-only"
                   />
-                  <div className="cursor-pointer rounded-lg border border-gray-700 px-3 py-2 text-center text-sm transition peer-checked:border-blue-500 peer-checked:bg-blue-600/10 peer-checked:text-blue-400 hover:border-gray-600">
+                  <div className="cursor-pointer rounded-lg border border-gray-800 px-3 py-2 text-center text-sm transition peer-checked:border-brand peer-checked:bg-brand/10 peer-checked:text-brand hover:border-gray-700">
                     {player}
                   </div>
                 </label>
               ))}
             </div>
             {errors.predicted_winner && (
-              <p className="mt-1 text-sm text-red-400">{errors.predicted_winner.message}</p>
+              <p className="mt-1 text-xs text-red-400">{errors.predicted_winner.message}</p>
             )}
           </div>
 
           <div>
-            <label className="mb-1 block text-sm text-gray-400">Buchstaben des Gewinners</label>
+            <label className="mb-1.5 block text-xs font-medium text-gray-500 uppercase tracking-wider">Winner&apos;s Letters</label>
             <div className="flex gap-2">
               {allLettersOptions.map((letters) => (
                 <label key={letters} className="flex-1">
@@ -127,14 +125,14 @@ export function MatchPredictionCard({
                     {...register('predicted_winner_letters')}
                     className="peer sr-only"
                   />
-                  <div className="cursor-pointer rounded-lg border border-gray-700 px-3 py-2 text-center text-sm transition peer-checked:border-blue-500 peer-checked:bg-blue-600/10 peer-checked:text-blue-400 hover:border-gray-600">
-                    {letters === 'none' ? 'Keine' : letters}
+                  <div className="cursor-pointer rounded-lg border border-gray-800 px-3 py-2 text-center text-sm transition peer-checked:border-brand peer-checked:bg-brand/10 peer-checked:text-brand hover:border-gray-700">
+                    {letters === 'none' ? 'Clean' : letters}
                   </div>
                 </label>
               ))}
             </div>
             {errors.predicted_winner_letters && (
-              <p className="mt-1 text-sm text-red-400">{errors.predicted_winner_letters.message}</p>
+              <p className="mt-1 text-xs text-red-400">{errors.predicted_winner_letters.message}</p>
             )}
           </div>
 
@@ -142,37 +140,37 @@ export function MatchPredictionCard({
             <button
               type="submit"
               disabled={upsertPrediction.isPending}
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 disabled:opacity-50"
+              className="btn-primary"
             >
-              {upsertPrediction.isPending ? 'Speichern…' : 'Tipp abgeben'}
+              {upsertPrediction.isPending ? 'Saving...' : 'Submit Prediction'}
             </button>
             {myPrediction && (
               <button
                 type="button"
                 onClick={() => setIsEditing(false)}
-                className="rounded-lg px-4 py-2 text-sm text-gray-400 hover:text-gray-300"
+                className="btn-ghost"
               >
-                Abbrechen
+                Cancel
               </button>
             )}
           </div>
 
           {upsertPrediction.isError && (
-            <p className="text-sm text-red-400">Fehler beim Speichern.</p>
+            <p className="text-sm text-red-400">Failed to save prediction.</p>
           )}
         </form>
       )}
 
       {/* Predictions table */}
       {allPredictions.length > 0 && !showForm && (
-        <div className="mt-3 overflow-hidden rounded-lg border border-gray-800">
+        <div className="mt-4 overflow-hidden rounded-lg border border-gray-800/60">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-800 bg-gray-800/50 text-left text-xs text-gray-500">
-                <th className="px-3 py-2 font-medium">Spieler</th>
+              <tr className="border-b border-gray-800/60 bg-gray-950 text-left text-xs text-gray-600 uppercase tracking-wider">
+                <th className="px-3 py-2 font-medium">Player</th>
                 <th className="px-3 py-2 font-medium">Winner</th>
                 <th className="px-3 py-2 font-medium">Letters</th>
-                <th className="px-3 py-2 text-right font-medium">Punkte</th>
+                <th className="px-3 py-2 text-right font-medium">Pts</th>
               </tr>
             </thead>
             <tbody>
@@ -188,18 +186,18 @@ export function MatchPredictionCard({
                     key={p.id}
                     className={
                       isMe
-                        ? 'bg-orange-500/10 border-b border-orange-500/20'
-                        : 'border-b border-gray-800/50 hover:bg-gray-800/30'
+                        ? 'bg-brand/5 border-b border-brand/10'
+                        : 'border-b border-gray-800/30 hover:bg-gray-950/50'
                     }
                   >
-                    <td className={`px-3 py-2 font-medium ${isMe ? 'text-orange-400' : 'text-gray-300'}`}>
-                      {isMe ? `${userDisplayName ?? p.profiles.display_name} (du)` : p.profiles.display_name}
+                    <td className={`px-3 py-2 font-medium ${isMe ? 'text-brand' : 'text-gray-300'}`}>
+                      {isMe ? `${userDisplayName ?? p.profiles.display_name} (you)` : p.profiles.display_name}
                     </td>
                     <td className="px-3 py-2">
                       <span className={
                         match.is_finished
                           ? winnerCorrect ? 'text-green-400' : 'text-red-400'
-                          : 'text-gray-300'
+                          : 'text-gray-400'
                       }>
                         {p.predicted_winner}
                       </span>
@@ -208,22 +206,22 @@ export function MatchPredictionCard({
                       <span className={
                         match.is_finished
                           ? lettersCorrect ? 'text-green-400' : 'text-red-400'
-                          : 'text-gray-300'
+                          : 'text-gray-400'
                       }>
                         {lettersLabel(p.predicted_winner_letters)}
                       </span>
                     </td>
                     <td className="px-3 py-2 text-right">
                       {match.is_finished && points !== null ? (
-                        <span className={`rounded px-1.5 py-0.5 text-xs font-bold ${
-                          points === 3 ? 'bg-green-600/20 text-green-400'
-                          : points === 1 ? 'bg-yellow-600/20 text-yellow-400'
-                          : 'bg-gray-700/50 text-gray-500'
+                        <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${
+                          points === 3 ? 'bg-green-500/10 text-green-400'
+                          : points === 1 ? 'bg-yellow-500/10 text-yellow-400'
+                          : 'bg-gray-500/10 text-gray-600'
                         }`}>
                           {points}
                         </span>
                       ) : (
-                        <span className="text-gray-600">—</span>
+                        <span className="text-gray-700">—</span>
                       )}
                     </td>
                     {isMe && canEdit && (
@@ -236,9 +234,9 @@ export function MatchPredictionCard({
                             })
                             setIsEditing(true)
                           }}
-                          className="text-xs text-blue-400 hover:text-blue-300"
+                          className="text-xs text-brand hover:text-brand-light transition"
                         >
-                          Ändern
+                          Edit
                         </button>
                       </td>
                     )}
@@ -250,9 +248,9 @@ export function MatchPredictionCard({
         </div>
       )}
 
-      {/* No prediction yet, not editing */}
+      {/* No prediction yet */}
       {!myPrediction && !showForm && (
-        <p className="mt-3 text-sm text-gray-500">Kein Tipp abgegeben.</p>
+        <p className="mt-3 text-sm text-gray-600">No prediction placed.</p>
       )}
     </div>
   )

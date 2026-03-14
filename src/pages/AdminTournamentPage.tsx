@@ -32,12 +32,12 @@ export function AdminTournamentPage() {
   if (tLoading || rLoading) {
     return (
       <div className="flex justify-center py-12">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-600 border-t-blue-500" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-800 border-t-brand" />
       </div>
     )
   }
 
-  if (!tournament) return <p className="text-red-400">Turnier nicht gefunden.</p>
+  if (!tournament) return <p className="text-red-400">Tournament not found.</p>
 
   const handleStatusChange = async (status: TournamentStatus) => {
     await updateTournament.mutateAsync({ id: tournament.id, status })
@@ -47,17 +47,17 @@ export function AdminTournamentPage() {
   return (
     <div className="space-y-6">
       <div>
-        <Link to="/admin" className="text-sm text-gray-400 hover:text-gray-300">&larr; Admin</Link>
+        <Link to="/admin" className="text-sm text-gray-600 hover:text-brand transition">&larr; Admin</Link>
         <div className="mt-2 flex items-center gap-3">
           <h1 className="text-2xl font-bold">{tournament.name}</h1>
           {!editStatus ? (
             <button
               onClick={() => setEditStatus(true)}
-              className={`rounded px-2 py-0.5 text-xs font-medium ${
-                tournament.status === 'active' ? 'bg-green-600/20 text-green-400'
-                : tournament.status === 'draft' ? 'bg-yellow-600/20 text-yellow-400'
-                : 'bg-gray-600/20 text-gray-400'
-              }`}
+              className={
+                tournament.status === 'active' ? 'badge-green'
+                : tournament.status === 'draft' ? 'badge-yellow'
+                : 'badge-gray'
+              }
             >
               {tournament.status}
             </button>
@@ -68,8 +68,8 @@ export function AdminTournamentPage() {
                   key={s}
                   onClick={() => handleStatusChange(s)}
                   disabled={updateTournament.isPending}
-                  className={`rounded px-2 py-0.5 text-xs font-medium ${
-                    s === tournament.status ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400 hover:text-gray-200'
+                  className={`rounded-lg px-2.5 py-0.5 text-xs font-medium transition ${
+                    s === tournament.status ? 'bg-brand text-black' : 'bg-gray-900 text-gray-500 hover:text-gray-300'
                   }`}
                 >
                   {s}
@@ -83,18 +83,18 @@ export function AdminTournamentPage() {
       <div>
         <Link
           to={`/admin/tournament/${tournament.id}/predictions`}
-          className="inline-block rounded bg-blue-600/20 px-3 py-1.5 text-sm font-medium text-blue-400 hover:bg-blue-600/30"
+          className="badge-brand cursor-pointer hover:bg-brand/20 transition"
         >
-          Alle Tipps verwalten
+          Manage all predictions
         </Link>
       </div>
 
       <div className="space-y-4">
-        <h2 className="text-lg font-semibold">Runden</h2>
+        <h2 className="text-lg font-semibold">Rounds</h2>
         {rounds?.map((round) => (
           <AdminRoundSection key={round.id} round={round} tournamentId={tournament.id} />
         ))}
-        {!rounds?.length && <p className="text-gray-500">Noch keine Runden.</p>}
+        {!rounds?.length && <p className="text-gray-600">No rounds yet.</p>}
       </div>
 
       <AdminAddRound tournamentId={tournament.id} nextOrder={(rounds?.length ?? 0) + 1} />

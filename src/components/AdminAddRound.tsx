@@ -33,39 +33,39 @@ export function AdminAddRound({ tournamentId, nextOrder }: Props) {
     return (
       <button
         onClick={() => setShowForm(true)}
-        className="w-full rounded-lg border border-dashed border-gray-700 py-3 text-sm text-gray-400 hover:border-gray-600 hover:text-gray-300"
+        className="w-full rounded-lg border border-dashed border-gray-800 py-3 text-sm text-gray-600 hover:border-brand/30 hover:text-brand transition"
       >
-        + Runde hinzufügen
+        + Add Round
       </button>
     )
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 rounded-lg border border-gray-800 bg-gray-900 p-4">
-      <h3 className="text-sm font-semibold">Neue Runde</h3>
+    <form onSubmit={handleSubmit(onSubmit)} className="card space-y-3">
+      <h3 className="text-sm font-semibold">New Round</h3>
       <div className="grid gap-3 sm:grid-cols-3">
         <div>
-          <label className="block text-xs text-gray-400">Name</label>
-          <input {...register('name')} className="mt-1 block w-full rounded border border-gray-700 bg-gray-800 px-3 py-1.5 text-sm" />
+          <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider">Name</label>
+          <input {...register('name')} className="input mt-1" />
           {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name.message}</p>}
         </div>
         <div>
-          <label className="block text-xs text-gray-400">Reihenfolge</label>
-          <input type="number" {...register('round_order')} className="mt-1 block w-full rounded border border-gray-700 bg-gray-800 px-3 py-1.5 text-sm" />
+          <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider">Order</label>
+          <input type="number" {...register('round_order')} className="input mt-1" />
           {errors.round_order && <p className="mt-1 text-xs text-red-400">{errors.round_order.message}</p>}
         </div>
         <div>
-          <label className="block text-xs text-gray-400">Deadline (optional)</label>
-          <input type="datetime-local" {...register('deadline_at')} className="mt-1 block w-full rounded border border-gray-700 bg-gray-800 px-3 py-1.5 text-sm" />
+          <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider">Deadline (optional)</label>
+          <input type="datetime-local" {...register('deadline_at')} className="input mt-1" />
           {errors.deadline_at && <p className="mt-1 text-xs text-red-400">{errors.deadline_at.message}</p>}
         </div>
       </div>
       <div className="flex gap-2">
-        <button type="submit" disabled={createRound.isPending} className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-500 disabled:opacity-50">
-          Erstellen
+        <button type="submit" disabled={createRound.isPending} className="btn-primary">
+          {createRound.isPending ? 'Creating...' : 'Create'}
         </button>
-        <button type="button" onClick={() => setShowForm(false)} className="rounded px-3 py-1.5 text-sm text-gray-400 hover:text-gray-300">
-          Abbrechen
+        <button type="button" onClick={() => setShowForm(false)} className="btn-ghost">
+          Cancel
         </button>
       </div>
     </form>

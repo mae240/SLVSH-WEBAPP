@@ -43,13 +43,13 @@ function AdminPredictionRow({ prediction, match, roundId }: {
 
   if (!editing) {
     return (
-      <div className="flex items-center justify-between text-xs text-gray-400">
+      <div className="flex items-center justify-between text-xs text-gray-500">
         <span>{prediction.profiles.display_name}</span>
         <div className="flex items-center gap-2">
-          <span>{prediction.predicted_winner} ({lettersLabel(prediction.predicted_winner_letters)})</span>
+          <span className="text-gray-400">{prediction.predicted_winner} ({lettersLabel(prediction.predicted_winner_letters)})</span>
           <button
             onClick={() => setEditing(true)}
-            className="rounded bg-gray-700 px-1.5 py-0.5 text-[10px] text-gray-400 hover:bg-gray-600 hover:text-gray-200"
+            className="rounded-lg bg-gray-900 px-1.5 py-0.5 text-[10px] text-gray-600 hover:text-brand transition"
           >
             Edit
           </button>
@@ -60,21 +60,17 @@ function AdminPredictionRow({ prediction, match, roundId }: {
 
   return (
     <form onSubmit={handleSubmit(onSave)} className="flex items-center justify-between gap-2 text-xs">
-      <span className="text-gray-400">{prediction.profiles.display_name}</span>
+      <span className="text-gray-500">{prediction.profiles.display_name}</span>
       <div className="flex items-center gap-1">
-        <select {...register('predicted_winner')} className="rounded border border-gray-600 bg-gray-900 px-1.5 py-0.5 text-xs">
+        <select {...register('predicted_winner')} className="input !py-0.5 !px-1.5 !text-xs !w-auto">
           <option value={match.player_a}>{match.player_a}</option>
           <option value={match.player_b}>{match.player_b}</option>
         </select>
-        <select {...register('predicted_winner_letters')} className="rounded border border-gray-600 bg-gray-900 px-1.5 py-0.5 text-xs">
-          {allLettersOptions.map((l) => <option key={l} value={l}>{l === 'none' ? 'Keine' : l}</option>)}
+        <select {...register('predicted_winner_letters')} className="input !py-0.5 !px-1.5 !text-xs !w-auto">
+          {allLettersOptions.map((l) => <option key={l} value={l}>{l === 'none' ? 'Clean' : l}</option>)}
         </select>
-        <button type="submit" disabled={updatePrediction.isPending} className="rounded bg-blue-600 px-1.5 py-0.5 text-[10px] font-medium text-white disabled:opacity-50">
-          OK
-        </button>
-        <button type="button" onClick={() => setEditing(false)} className="rounded bg-gray-700 px-1.5 py-0.5 text-[10px] text-gray-400 hover:bg-gray-600">
-          X
-        </button>
+        <button type="submit" disabled={updatePrediction.isPending} className="btn-primary !px-1.5 !py-0.5 !text-[10px]">OK</button>
+        <button type="button" onClick={() => setEditing(false)} className="rounded-lg bg-gray-900 px-1.5 py-0.5 text-[10px] text-gray-600 hover:text-gray-300 transition">X</button>
       </div>
     </form>
   )
@@ -106,10 +102,10 @@ export function AdminMatchRow({ match, predictions, roundId }: Props) {
   }
 
   return (
-    <div className="rounded border border-gray-700 bg-gray-800 p-3">
+    <div className="rounded-lg border border-gray-800/60 bg-black p-3">
       <div className="flex items-center justify-between">
         <span className="text-sm">
-          <span className="text-gray-500">#{match.match_number}</span>{' '}
+          <span className="text-gray-600">#{match.match_number}</span>{' '}
           {match.player_a} vs {match.player_b}
         </span>
         <div className="flex items-center gap-2">
@@ -118,40 +114,40 @@ export function AdminMatchRow({ match, predictions, roundId }: Props) {
               {match.winner} ({lettersLabel(match.winner_letters)})
             </span>
           ) : (
-            <span className="text-xs text-gray-500">Offen</span>
+            <span className="text-xs text-gray-600">Pending</span>
           )}
           <button
             onClick={() => setShowResult(!showResult)}
-            className="rounded bg-gray-700 px-2 py-0.5 text-xs text-gray-300 hover:bg-gray-600"
+            className="rounded-lg bg-gray-900 px-2 py-0.5 text-xs text-gray-400 hover:text-brand transition"
           >
-            Ergebnis
+            Result
           </button>
           <button
             onClick={() => setShowPreds(!showPreds)}
-            className="rounded bg-gray-700 px-2 py-0.5 text-xs text-gray-300 hover:bg-gray-600"
+            className="rounded-lg bg-gray-900 px-2 py-0.5 text-xs text-gray-400 hover:text-brand transition"
           >
-            Tipps ({predictions.length})
+            Bets ({predictions.length})
           </button>
           {confirmDelete ? (
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-400">Löschen?</span>
+              <span className="text-xs text-gray-500">Delete?</span>
               <button
                 onClick={() => deleteMatch.mutate({ id: match.id, roundId })}
                 disabled={deleteMatch.isPending}
-                className="rounded bg-red-600/20 px-2 py-0.5 text-xs text-red-400 hover:bg-red-600/30 disabled:opacity-50"
+                className="badge-red cursor-pointer hover:bg-red-500/20 disabled:opacity-50"
               >
-                Ja
+                Yes
               </button>
-              <button onClick={() => setConfirmDelete(false)} className="text-xs text-gray-500 hover:text-gray-300">
-                Nein
+              <button onClick={() => setConfirmDelete(false)} className="text-xs text-gray-600 hover:text-gray-400 transition">
+                No
               </button>
             </div>
           ) : (
             <button
               onClick={() => setConfirmDelete(true)}
-              className="rounded px-2 py-0.5 text-xs text-gray-600 hover:bg-red-600/20 hover:text-red-400"
+              className="text-xs text-gray-700 hover:text-red-400 transition"
             >
-              Löschen
+              Delete
             </button>
           )}
         </div>
@@ -160,8 +156,8 @@ export function AdminMatchRow({ match, predictions, roundId }: Props) {
       {showResult && (
         <form onSubmit={handleSubmit(onSubmitResult)} className="mt-2 flex items-end gap-2">
           <div>
-            <label className="block text-xs text-gray-500">Gewinner</label>
-            <select {...register('winner')} className="mt-0.5 rounded border border-gray-600 bg-gray-900 px-2 py-1 text-sm">
+            <label className="block text-xs text-gray-600">Winner</label>
+            <select {...register('winner')} className="input mt-0.5 !py-1 !px-2 !text-sm !w-auto">
               <option value="">—</option>
               <option value={match.player_a}>{match.player_a}</option>
               <option value={match.player_b}>{match.player_b}</option>
@@ -169,15 +165,15 @@ export function AdminMatchRow({ match, predictions, roundId }: Props) {
             {errors.winner && <p className="text-xs text-red-400">{errors.winner.message}</p>}
           </div>
           <div>
-            <label className="block text-xs text-gray-500">Buchstaben</label>
-            <select {...register('winner_letters')} className="mt-0.5 rounded border border-gray-600 bg-gray-900 px-2 py-1 text-sm">
+            <label className="block text-xs text-gray-600">Letters</label>
+            <select {...register('winner_letters')} className="input mt-0.5 !py-1 !px-2 !text-sm !w-auto">
               <option value="">—</option>
-              {allLettersOptions.map((l) => <option key={l} value={l}>{l === 'none' ? 'Keine' : l}</option>)}
+              {allLettersOptions.map((l) => <option key={l} value={l}>{l === 'none' ? 'Clean' : l}</option>)}
             </select>
             {errors.winner_letters && <p className="text-xs text-red-400">{errors.winner_letters.message}</p>}
           </div>
-          <button type="submit" disabled={updateMatch.isPending} className="rounded bg-blue-600 px-3 py-1 text-xs font-medium text-white disabled:opacity-50">
-            Speichern
+          <button type="submit" disabled={updateMatch.isPending} className="btn-primary !py-1 !px-3 !text-xs">
+            Save
           </button>
         </form>
       )}
@@ -190,7 +186,7 @@ export function AdminMatchRow({ match, predictions, roundId }: Props) {
         </div>
       )}
       {showPreds && predictions.length === 0 && (
-        <p className="mt-2 text-xs text-gray-500">Keine Tipps.</p>
+        <p className="mt-2 text-xs text-gray-600">No predictions.</p>
       )}
     </div>
   )

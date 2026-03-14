@@ -12,5 +12,5 @@ export function lettersToForm(val: WinnerLetters | null): string {
 
 /** Display label for letters value */
 export function lettersLabel(val: WinnerLetters | null): string {
-  return val ?? 'Keine'
+  return val ?? 'Clean'
 }

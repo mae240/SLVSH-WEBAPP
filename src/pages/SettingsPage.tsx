@@ -6,10 +6,10 @@ import { useAuth } from '@/hooks/useAuth'
 import { useState } from 'react'
 
 const passwordSchema = z.object({
-  password: z.string().min(6, 'Mindestens 6 Zeichen'),
+  password: z.string().min(6, 'At least 6 characters'),
   confirm: z.string(),
 }).refine(d => d.password === d.confirm, {
-  message: 'Passwörter stimmen nicht überein',
+  message: 'Passwords do not match',
   path: ['confirm'],
 })
 
@@ -38,43 +38,31 @@ export function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Einstellungen</h1>
+      <h1 className="text-2xl font-bold">Settings</h1>
 
-      <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
-        <div className="text-sm text-gray-400">
-          Angemeldet als <span className="font-medium text-gray-200">{profile?.display_name}</span>
+      <div className="card">
+        <div className="text-sm text-gray-500">
+          Signed in as <span className="font-medium text-brand">{profile?.display_name}</span>
         </div>
       </div>
 
-      <div className="rounded-lg border border-gray-800 bg-gray-900 p-4 space-y-4">
-        <h2 className="text-lg font-semibold">Passwort ändern</h2>
+      <div className="card space-y-4">
+        <h2 className="text-lg font-semibold">Change Password</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 max-w-sm">
           <div>
-            <label className="block text-xs text-gray-400">Neues Passwort</label>
-            <input
-              type="password"
-              {...register('password')}
-              className="mt-1 block w-full rounded border border-gray-700 bg-gray-800 px-3 py-1.5 text-sm"
-            />
+            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider">New Password</label>
+            <input type="password" {...register('password')} className="input mt-1" />
             {errors.password && <p className="mt-1 text-xs text-red-400">{errors.password.message}</p>}
           </div>
           <div>
-            <label className="block text-xs text-gray-400">Passwort bestätigen</label>
-            <input
-              type="password"
-              {...register('confirm')}
-              className="mt-1 block w-full rounded border border-gray-700 bg-gray-800 px-3 py-1.5 text-sm"
-            />
+            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider">Confirm Password</label>
+            <input type="password" {...register('confirm')} className="input mt-1" />
             {errors.confirm && <p className="mt-1 text-xs text-red-400">{errors.confirm.message}</p>}
           </div>
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="rounded bg-blue-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-blue-500 disabled:opacity-50"
-          >
-            {isSubmitting ? 'Speichern...' : 'Passwort ändern'}
+          <button type="submit" disabled={isSubmitting} className="btn-primary">
+            {isSubmitting ? 'Saving...' : 'Update Password'}
           </button>
-          {success && <p className="text-sm text-green-400">Passwort erfolgreich geändert.</p>}
+          {success && <p className="text-sm text-green-400">Password updated successfully.</p>}
           {error && <p className="text-sm text-red-400">{error}</p>}
         </form>
       </div>

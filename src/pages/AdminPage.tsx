@@ -33,12 +33,12 @@ export function AdminPage() {
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-600 border-t-blue-500" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-800 border-t-brand" />
       </div>
     )
   }
 
-  if (error) return <p className="text-red-400">Fehler beim Laden.</p>
+  if (error) return <p className="text-red-400">Failed to load.</p>
 
   return (
     <div className="space-y-6">
@@ -46,80 +46,80 @@ export function AdminPage() {
         <h1 className="text-2xl font-bold">Admin</h1>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500"
+          className="btn-primary"
         >
-          {showForm ? 'Abbrechen' : 'Neues Turnier'}
+          {showForm ? 'Cancel' : 'New Tournament'}
         </button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 rounded-lg border border-gray-800 bg-gray-900 p-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="card space-y-3">
           <div>
-            <label className="block text-sm text-gray-400">Name</label>
-            <input {...register('name')} className="mt-1 block w-full rounded border border-gray-700 bg-gray-800 px-3 py-2 text-sm" />
-            {errors.name && <p className="mt-1 text-sm text-red-400">{errors.name.message}</p>}
+            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider">Name</label>
+            <input {...register('name')} className="input mt-1" />
+            {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name.message}</p>}
           </div>
           <div>
-            <label className="block text-sm text-gray-400">Slug</label>
-            <input {...register('slug')} className="mt-1 block w-full rounded border border-gray-700 bg-gray-800 px-3 py-2 text-sm" placeholder="z-b-slvsh-cup-2026" />
-            {errors.slug && <p className="mt-1 text-sm text-red-400">{errors.slug.message}</p>}
+            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider">Slug</label>
+            <input {...register('slug')} className="input mt-1" placeholder="e-g-slvsh-cup-2026" />
+            {errors.slug && <p className="mt-1 text-xs text-red-400">{errors.slug.message}</p>}
           </div>
           <div>
-            <label className="block text-sm text-gray-400">Beschreibung (optional)</label>
-            <input {...register('description')} className="mt-1 block w-full rounded border border-gray-700 bg-gray-800 px-3 py-2 text-sm" />
+            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider">Description (optional)</label>
+            <input {...register('description')} className="input mt-1" />
           </div>
-          <button type="submit" disabled={createTournament.isPending} className="rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 disabled:opacity-50">
-            {createTournament.isPending ? 'Erstellen…' : 'Erstellen'}
+          <button type="submit" disabled={createTournament.isPending} className="btn-primary">
+            {createTournament.isPending ? 'Creating...' : 'Create'}
           </button>
-          {createTournament.isError && <p className="text-sm text-red-400">Fehler beim Erstellen.</p>}
+          {createTournament.isError && <p className="text-sm text-red-400">Failed to create.</p>}
         </form>
       )}
 
       <div className="space-y-3">
         {tournaments?.map((t) => (
-          <div key={t.id} className="rounded-lg border border-gray-800 bg-gray-900 p-4 transition hover:border-gray-700">
+          <div key={t.id} className="card group transition hover:border-brand/30">
             <div className="flex items-center justify-between">
               <Link to={`/admin/tournament/${t.id}`} className="flex-1">
                 <div className="flex items-center gap-3">
-                  <span className="font-medium">{t.name}</span>
-                  <span className={`rounded px-2 py-0.5 text-xs font-medium ${
-                    t.status === 'active' ? 'bg-green-600/20 text-green-400'
-                    : t.status === 'draft' ? 'bg-yellow-600/20 text-yellow-400'
-                    : 'bg-gray-600/20 text-gray-400'
-                  }`}>
+                  <span className="font-medium group-hover:text-brand transition">{t.name}</span>
+                  <span className={
+                    t.status === 'active' ? 'badge-green'
+                    : t.status === 'draft' ? 'badge-yellow'
+                    : 'badge-gray'
+                  }>
                     {t.status}
                   </span>
                 </div>
               </Link>
               {confirmDeleteId === t.id ? (
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-400">Wirklich löschen?</span>
+                  <span className="text-xs text-gray-500">Delete?</span>
                   <button
                     onClick={async () => { await deleteTournament.mutateAsync(t.id); setConfirmDeleteId(null) }}
                     disabled={deleteTournament.isPending}
-                    className="rounded bg-red-600/20 px-2 py-0.5 text-xs text-red-400 hover:bg-red-600/30 disabled:opacity-50"
+                    className="badge-red cursor-pointer hover:bg-red-500/20 disabled:opacity-50"
                   >
-                    Ja, löschen
+                    Yes
                   </button>
                   <button
                     onClick={() => setConfirmDeleteId(null)}
-                    className="text-xs text-gray-500 hover:text-gray-300"
+                    className="text-xs text-gray-600 hover:text-gray-400 transition"
                   >
-                    Abbrechen
+                    No
                   </button>
                 </div>
               ) : (
                 <button
                   onClick={() => setConfirmDeleteId(t.id)}
-                  className="rounded px-2 py-0.5 text-xs text-gray-600 hover:bg-red-600/20 hover:text-red-400"
+                  className="text-xs text-gray-700 hover:text-red-400 transition"
                 >
-                  Löschen
+                  Delete
                 </button>
               )}
             </div>
           </div>
         ))}
-        {!tournaments?.length && <p className="text-gray-400">Noch keine Turniere.</p>}
+        {!tournaments?.length && <p className="text-gray-600">No tournaments yet.</p>}
       </div>
     </div>
   )

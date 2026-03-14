@@ -42,7 +42,7 @@ export function AdminRoundSection({ round, tournamentId }: Props) {
   }
 
   return (
-    <div className="rounded-lg border border-gray-800 bg-gray-900">
+    <div className="card !p-0 overflow-hidden">
       <button
         onClick={() => setExpanded(!expanded)}
         className="flex w-full items-center justify-between p-4 text-left"
@@ -50,81 +50,81 @@ export function AdminRoundSection({ round, tournamentId }: Props) {
         <div className="flex items-center gap-3">
           <span className="font-medium">{round.name}</span>
           {round.deadline_at && (
-            <span className="text-xs text-gray-500">
-              {new Date(round.deadline_at).toLocaleString('de-DE')}
+            <span className="text-xs text-gray-600">
+              {new Date(round.deadline_at).toLocaleString('en-US')}
             </span>
           )}
         </div>
         <div className="flex items-center gap-2">
           {!round.is_open && !round.is_locked && (
-            <span className="rounded bg-gray-600/20 px-2 py-0.5 text-xs text-gray-400">Vorbereitung</span>
+            <span className="badge-gray text-[10px]">Draft</span>
           )}
           {round.is_open && !round.is_locked && !isPast && (
-            <span className="rounded bg-green-600/20 px-2 py-0.5 text-xs text-green-400">Offen</span>
+            <span className="badge-green text-[10px]">Open</span>
           )}
           {round.is_open && !round.is_locked && isPast && (
-            <span className="rounded bg-yellow-600/20 px-2 py-0.5 text-xs text-yellow-400">Deadline vorbei</span>
+            <span className="badge-yellow text-[10px]">Deadline passed</span>
           )}
           {round.is_locked && (
-            <span className="rounded bg-red-600/20 px-2 py-0.5 text-xs text-red-400">Gesperrt</span>
+            <span className="badge-red text-[10px]">Locked</span>
           )}
-          <span className="text-gray-500">{expanded ? '▲' : '▼'}</span>
+          <span className="text-gray-600">{expanded ? '▲' : '▼'}</span>
         </div>
       </button>
 
       {expanded && (
-        <div className="border-t border-gray-800 p-4 space-y-4">
+        <div className="border-t border-gray-800/60 p-4 space-y-4">
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={toggleOpen}
               disabled={updateRound.isPending}
-              className={`rounded px-3 py-1 text-xs font-medium ${
+              className={`rounded-lg px-3 py-1 text-xs font-medium transition ${
                 round.is_open
-                  ? 'bg-yellow-600/20 text-yellow-400 hover:bg-yellow-600/30'
-                  : 'bg-blue-600/20 text-blue-400 hover:bg-blue-600/30'
+                  ? 'bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20'
+                  : 'bg-brand/10 text-brand hover:bg-brand/20'
               }`}
             >
-              {round.is_open ? 'Zurücknehmen' : 'Freigeben'}
+              {round.is_open ? 'Revoke' : 'Release'}
             </button>
             <button
               onClick={toggleLock}
               disabled={updateRound.isPending}
-              className={`rounded px-3 py-1 text-xs font-medium ${
+              className={`rounded-lg px-3 py-1 text-xs font-medium transition ${
                 round.is_locked
-                  ? 'bg-green-600/20 text-green-400 hover:bg-green-600/30'
-                  : 'bg-red-600/20 text-red-400 hover:bg-red-600/30'
+                  ? 'bg-green-500/10 text-green-400 hover:bg-green-500/20'
+                  : 'bg-red-500/10 text-red-400 hover:bg-red-500/20'
               }`}
             >
-              {round.is_locked ? 'Entsperren' : 'Sperren'}
+              {round.is_locked ? 'Unlock' : 'Lock'}
             </button>
             <div className="ml-auto">
               {confirmDelete ? (
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-400">Wirklich löschen?</span>
+                  <span className="text-xs text-gray-500">Delete round?</span>
                   <button
                     onClick={() => deleteRound.mutate({ id: round.id, tournamentId })}
                     disabled={deleteRound.isPending}
-                    className="rounded bg-red-600/20 px-2 py-0.5 text-xs text-red-400 hover:bg-red-600/30 disabled:opacity-50"
+                    className="badge-red cursor-pointer hover:bg-red-500/20 disabled:opacity-50"
                   >
-                    Ja, löschen
+                    Yes
                   </button>
-                  <button onClick={() => setConfirmDelete(false)} className="text-xs text-gray-500 hover:text-gray-300">
-                    Abbrechen
+                  <button onClick={() => setConfirmDelete(false)} className="text-xs text-gray-600 hover:text-gray-400 transition">
+                    Cancel
                   </button>
                 </div>
               ) : (
                 <button
                   onClick={() => setConfirmDelete(true)}
-                  className="rounded px-2 py-0.5 text-xs text-gray-600 hover:bg-red-600/20 hover:text-red-400"
+                  className="text-xs text-gray-700 hover:text-red-400 transition"
                 >
-                  Runde löschen
+                  Delete round
                 </button>
               )}
             </div>
           </div>
 
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-gray-500">Deadline:</span>
+            <span className="text-gray-600">Deadline:</span>
             {editingDeadline ? (
               <form
                 className="flex items-center gap-2"
@@ -142,27 +142,19 @@ export function AdminRoundSection({ round, tournamentId }: Props) {
                   type="datetime-local"
                   value={deadlineValue}
                   onChange={(e) => setDeadlineValue(e.target.value)}
-                  className="rounded border border-gray-700 bg-gray-800 px-2 py-1 text-sm text-gray-200"
+                  className="input !py-1 !px-2 !text-sm !w-auto"
                 />
-                <button
-                  type="submit"
-                  disabled={updateRound.isPending}
-                  className="rounded bg-blue-600/20 px-2 py-1 text-xs font-medium text-blue-400 hover:bg-blue-600/30"
-                >
-                  Speichern
+                <button type="submit" disabled={updateRound.isPending} className="btn-primary !px-2 !py-1 !text-xs">
+                  Save
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setEditingDeadline(false)}
-                  className="text-xs text-gray-500 hover:text-gray-400"
-                >
-                  Abbrechen
+                <button type="button" onClick={() => setEditingDeadline(false)} className="text-xs text-gray-600 hover:text-gray-400 transition">
+                  Cancel
                 </button>
               </form>
             ) : (
               <>
-                <span className="text-gray-300">
-                  {round.deadline_at ? new Date(round.deadline_at).toLocaleString('de-DE') : 'Keine'}
+                <span className="text-gray-400">
+                  {round.deadline_at ? new Date(round.deadline_at).toLocaleString('en-US') : 'None'}
                 </span>
                 <button
                   onClick={() => {
@@ -175,9 +167,9 @@ export function AdminRoundSection({ round, tournamentId }: Props) {
                     }
                     setEditingDeadline(true)
                   }}
-                  className="text-xs text-blue-400 hover:text-blue-300"
+                  className="text-xs text-brand hover:text-brand-light transition"
                 >
-                  Ändern
+                  Edit
                 </button>
               </>
             )}
@@ -193,7 +185,7 @@ export function AdminRoundSection({ round, tournamentId }: Props) {
               })}
             </div>
           ) : (
-            <p className="text-sm text-gray-500">Keine Matches.</p>
+            <p className="text-sm text-gray-600">No matches.</p>
           )}
 
           <AdminAddMatch tournamentId={tournamentId} roundId={round.id} nextNumber={(matches?.length ?? 0) + 1} />
