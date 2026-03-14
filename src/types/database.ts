@@ -75,7 +75,7 @@ export interface Database {
           tournament_id: string
           name: string
           round_order: number
-          deadline_at: string
+          deadline_at: string | null
           is_locked: boolean
           is_open: boolean
           created_at: string
@@ -85,7 +85,7 @@ export interface Database {
           tournament_id: string
           name: string
           round_order: number
-          deadline_at: string
+          deadline_at?: string | null
           is_locked?: boolean
           is_open?: boolean
           created_at?: string
@@ -95,7 +95,7 @@ export interface Database {
           tournament_id?: string
           name?: string
           round_order?: number
-          deadline_at?: string
+          deadline_at?: string | null
           is_locked?: boolean
           is_open?: boolean
           created_at?: string

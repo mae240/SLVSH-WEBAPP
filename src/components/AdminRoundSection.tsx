@@ -23,7 +23,7 @@ export function AdminRoundSection({ round, tournamentId }: Props) {
 
   const [editingDeadline, setEditingDeadline] = useState(false)
   const [deadlineValue, setDeadlineValue] = useState('')
-  const isPast = new Date(round.deadline_at) <= new Date()
+  const isPast = round.deadline_at ? new Date(round.deadline_at) <= new Date() : false
 
   const toggleLock = async () => {
     await updateRound.mutateAsync({
@@ -49,9 +49,11 @@ export function AdminRoundSection({ round, tournamentId }: Props) {
       >
         <div className="flex items-center gap-3">
           <span className="font-medium">{round.name}</span>
-          <span className="text-xs text-gray-500">
-            {new Date(round.deadline_at).toLocaleString('de-DE')}
-          </span>
+          {round.deadline_at && (
+            <span className="text-xs text-gray-500">
+              {new Date(round.deadline_at).toLocaleString('de-DE')}
+            </span>
+          )}
         </div>
         <div className="flex items-center gap-2">
           {!round.is_open && !round.is_locked && (
@@ -128,11 +130,10 @@ export function AdminRoundSection({ round, tournamentId }: Props) {
                 className="flex items-center gap-2"
                 onSubmit={async (e) => {
                   e.preventDefault()
-                  if (!deadlineValue) return
                   await updateRound.mutateAsync({
                     id: round.id,
                     tournamentId,
-                    deadline_at: new Date(deadlineValue).toISOString(),
+                    deadline_at: deadlineValue ? new Date(deadlineValue).toISOString() : null,
                   })
                   setEditingDeadline(false)
                 }}
@@ -160,12 +161,18 @@ export function AdminRoundSection({ round, tournamentId }: Props) {
               </form>
             ) : (
               <>
-                <span className="text-gray-300">{new Date(round.deadline_at).toLocaleString('de-DE')}</span>
+                <span className="text-gray-300">
+                  {round.deadline_at ? new Date(round.deadline_at).toLocaleString('de-DE') : 'Keine'}
+                </span>
                 <button
                   onClick={() => {
-                    const d = new Date(round.deadline_at)
-                    const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
-                    setDeadlineValue(local)
+                    if (round.deadline_at) {
+                      const d = new Date(round.deadline_at)
+                      const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
+                      setDeadlineValue(local)
+                    } else {
+                      setDeadlineValue('')
+                    }
                     setEditingDeadline(true)
                   }}
                   className="text-xs text-blue-400 hover:text-blue-300"

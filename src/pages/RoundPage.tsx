@@ -28,7 +28,7 @@ export function RoundPage() {
     return <p className="text-red-400">Runde nicht gefunden.</p>
   }
 
-  const isPast = new Date(round.deadline_at) <= new Date()
+  const isPast = round.deadline_at ? new Date(round.deadline_at) <= new Date() : false
   const isLocked = round.is_locked
   const isOpen = round.is_open
   const canEdit = isOpen && !isPast && !isLocked
@@ -45,7 +45,7 @@ export function RoundPage() {
         </Link>
         <h1 className="mt-2 text-2xl font-bold">{round.name}</h1>
 
-        {canEdit && (
+        {canEdit && round.deadline_at && (
           <div className="mt-2">
             <Countdown deadline={round.deadline_at} />
           </div>

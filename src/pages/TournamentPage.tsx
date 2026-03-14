@@ -43,7 +43,7 @@ export function TournamentPage() {
         <div className="space-y-3">
           <h2 className="text-lg font-semibold">Runden</h2>
           {rounds.map((round) => {
-            const isPast = new Date(round.deadline_at) <= new Date()
+            const isPast = round.deadline_at ? new Date(round.deadline_at) <= new Date() : false
             const isLocked = round.is_locked
             const isOpen = round.is_open
             return (
@@ -77,9 +77,11 @@ export function TournamentPage() {
                     )}
                   </div>
                 </div>
-                <p className="mt-1 text-sm text-gray-500">
-                  Deadline: {new Date(round.deadline_at).toLocaleString('de-DE')}
-                </p>
+                {round.deadline_at && (
+                  <p className="mt-1 text-sm text-gray-500">
+                    Deadline: {new Date(round.deadline_at).toLocaleString('de-DE')}
+                  </p>
+                )}
               </Link>
             )
           })}

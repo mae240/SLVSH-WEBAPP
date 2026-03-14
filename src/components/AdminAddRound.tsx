@@ -23,7 +23,7 @@ export function AdminAddRound({ tournamentId, nextOrder }: Props) {
       tournament_id: tournamentId,
       name: data.name,
       round_order: data.round_order,
-      deadline_at: new Date(data.deadline_at).toISOString(),
+      ...(data.deadline_at ? { deadline_at: new Date(data.deadline_at).toISOString() } : {}),
     })
     reset({ round_order: nextOrder + 1 })
     setShowForm(false)
@@ -55,7 +55,7 @@ export function AdminAddRound({ tournamentId, nextOrder }: Props) {
           {errors.round_order && <p className="mt-1 text-xs text-red-400">{errors.round_order.message}</p>}
         </div>
         <div>
-          <label className="block text-xs text-gray-400">Deadline</label>
+          <label className="block text-xs text-gray-400">Deadline (optional)</label>
           <input type="datetime-local" {...register('deadline_at')} className="mt-1 block w-full rounded border border-gray-700 bg-gray-800 px-3 py-1.5 text-sm" />
           {errors.deadline_at && <p className="mt-1 text-xs text-red-400">{errors.deadline_at.message}</p>}
         </div>

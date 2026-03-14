@@ -10,7 +10,7 @@ export type TournamentFormData = z.infer<typeof tournamentSchema>
 export const roundSchema = z.object({
   name: z.string().min(1, 'Name ist erforderlich'),
   round_order: z.coerce.number().int().min(1, 'Reihenfolge ab 1'),
-  deadline_at: z.string().min(1, 'Deadline ist erforderlich'),
+  deadline_at: z.string().default(''),
 })
 export type RoundFormData = z.infer<typeof roundSchema>
 

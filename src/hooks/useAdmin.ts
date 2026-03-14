@@ -75,7 +75,7 @@ export function useCreateRound() {
 export function useUpdateRound() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: async (input: { id: string; tournamentId: string; name?: string; deadline_at?: string; is_locked?: boolean; is_open?: boolean }) => {
+    mutationFn: async (input: { id: string; tournamentId: string; name?: string; deadline_at?: string | null; is_locked?: boolean; is_open?: boolean }) => {
       const { data, error } = await supabase
         .from('rounds')
         .update({
