@@ -40,18 +40,18 @@
     @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
   }
   .badge-green {
-    @apply badge bg-green-500/10 text-green-400 ring-1 ring-green-500/20;
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-500/10 text-green-400 ring-1 ring-green-500/20;
   }
   .badge-red {
-    @apply badge bg-red-500/10 text-red-400 ring-1 ring-red-500/20;
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-red-500/10 text-red-400 ring-1 ring-red-500/20;
   }
   .badge-yellow {
-    @apply badge bg-yellow-500/10 text-yellow-400 ring-1 ring-yellow-500/20;
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-500/10 text-yellow-400 ring-1 ring-yellow-500/20;
   }
   .badge-gray {
-    @apply badge bg-gray-500/10 text-gray-400 ring-1 ring-gray-500/20;
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-gray-500/10 text-gray-400 ring-1 ring-gray-500/20;
   }
   .badge-brand {
-    @apply badge bg-brand/10 text-brand ring-1 ring-brand/20;
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-brand/10 text-brand ring-1 ring-brand/20;
   }
 }
