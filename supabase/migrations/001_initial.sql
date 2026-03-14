@@ -42,7 +42,7 @@ create table matches (
   player_a      text not null,
   player_b      text not null,
   winner        text,
-  winner_letters text check (winner_letters in ('S', 'SL', 'SLV', 'SLVS')),
+  loser_letters text check (loser_letters in ('S', 'SL', 'SLV', 'SLVS')),
   is_finished   boolean not null default false,
   created_at    timestamptz not null default now()
 );
@@ -54,7 +54,7 @@ create table predictions (
   round_id         uuid not null references rounds(id) on delete cascade,
   match_id         uuid not null references matches(id) on delete cascade,
   predicted_winner text not null,
-  predicted_winner_letters text not null check (predicted_winner_letters in ('S', 'SL', 'SLV', 'SLVS')),
+  predicted_letters text not null check (predicted_letters in ('S', 'SL', 'SLV', 'SLVS')),
   submitted_at     timestamptz not null default now(),
   updated_at       timestamptz not null default now(),
   unique (user_id, match_id)
