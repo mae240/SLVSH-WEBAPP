@@ -43,7 +43,6 @@ export function TournamentPage() {
         <div className="space-y-3">
           <h2 className="text-lg font-semibold">Rounds</h2>
           {rounds.map((round) => {
-            const isPast = round.deadline_at ? new Date(round.deadline_at) <= new Date() : false
             const isLocked = round.is_locked
             const isOpen = round.is_open
             return (
@@ -57,8 +56,7 @@ export function TournamentPage() {
                   <div className="flex gap-2">
                     {isLocked && <span className="badge-red">Locked</span>}
                     {!isLocked && !isOpen && <span className="badge-gray">Draft</span>}
-                    {!isLocked && isOpen && isPast && <span className="badge-yellow">Deadline passed</span>}
-                    {!isLocked && isOpen && !isPast && <span className="badge-green">Open</span>}
+                    {!isLocked && isOpen && <span className="badge-green">Open</span>}
                   </div>
                 </div>
                 {round.deadline_at && (

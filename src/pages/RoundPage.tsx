@@ -28,11 +28,10 @@ export function RoundPage() {
     return <p className="text-red-400">Round not found.</p>
   }
 
-  const isPast = round.deadline_at ? new Date(round.deadline_at) <= new Date() : false
   const isLocked = round.is_locked
   const isOpen = round.is_open
-  const canEdit = isOpen && !isPast && !isLocked
-  const showOtherPredictions = isLocked || isPast
+  const canEdit = isOpen && !isLocked
+  const showOtherPredictions = isLocked
 
   const predsByMatch = groupPredictionsByMatch(predictions ?? [])
 
@@ -55,9 +54,7 @@ export function RoundPage() {
           <p className="mt-2 text-sm text-yellow-400/80">
             {isLocked
               ? 'Round is locked — no changes allowed.'
-              : !isOpen
-                ? 'Round is not open yet — predictions cannot be placed.'
-                : 'Deadline has passed — no changes allowed.'}
+              : 'Round is not open yet — predictions cannot be placed.'}
           </p>
         )}
       </div>

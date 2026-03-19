@@ -1,19 +1,8 @@
 -- ============================================================
--- Reveal predictions after deadline passes (no pg_cron needed)
--- Treat deadline_at <= now() as effectively locked for visibility
+-- No schema changes needed — auto-lock is handled client-side.
+-- This migration is kept as documentation of the visibility model:
+--
+-- Predictions are visible to others when is_locked = true.
+-- The frontend auto-locks rounds when deadline_at <= now().
+-- The existing RLS policy (migration 008) already checks is_locked.
 -- ============================================================
-
-DROP POLICY "predictions: select visibility" ON predictions;
-
-CREATE POLICY "predictions: select visibility"
-  ON predictions FOR SELECT
-  TO authenticated
-  USING (
-    user_id = auth.uid()
-    OR is_admin()
-    OR EXISTS (
-      SELECT 1 FROM rounds r
-      WHERE r.id = round_id
-        AND (r.is_locked = true OR (r.deadline_at IS NOT NULL AND r.deadline_at <= now()))
-    )
-  );

@@ -23,8 +23,6 @@ export function AdminRoundSection({ round, tournamentId }: Props) {
 
   const [editingDeadline, setEditingDeadline] = useState(false)
   const [deadlineValue, setDeadlineValue] = useState('')
-  const isPast = round.deadline_at ? new Date(round.deadline_at) <= new Date() : false
-
   const toggleLock = async () => {
     await updateRound.mutateAsync({
       id: round.id,
@@ -59,11 +57,8 @@ export function AdminRoundSection({ round, tournamentId }: Props) {
           {!round.is_open && !round.is_locked && (
             <span className="badge-gray text-[10px]">Draft</span>
           )}
-          {round.is_open && !round.is_locked && !isPast && (
+          {round.is_open && !round.is_locked && (
             <span className="badge-green text-[10px]">Open</span>
-          )}
-          {round.is_open && !round.is_locked && isPast && (
-            <span className="badge-yellow text-[10px]">Deadline passed</span>
           )}
           {round.is_locked && (
             <span className="badge-red text-[10px]">Locked</span>
