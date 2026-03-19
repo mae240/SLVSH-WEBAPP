@@ -1,8 +1,16 @@
 -- ============================================================
--- No schema changes needed — auto-lock is handled client-side.
--- This migration is kept as documentation of the visibility model:
---
--- Predictions are visible to others when is_locked = true.
--- The frontend auto-locks rounds when deadline_at <= now().
--- The existing RLS policy (migration 008) already checks is_locked.
+-- Auto-lock rounds when deadline passes (callable by any user)
+-- SECURITY DEFINER bypasses RLS so non-admins can trigger it
 -- ============================================================
+
+CREATE OR REPLACE FUNCTION auto_lock_expired_rounds()
+RETURNS void
+LANGUAGE sql
+SECURITY DEFINER
+AS $$
+  UPDATE rounds
+  SET is_locked = true
+  WHERE is_locked = false
+    AND deadline_at IS NOT NULL
+    AND deadline_at <= now();
+$$;

@@ -6,14 +6,11 @@ import type { Database } from '@/types/database'
 type Round = Database['public']['Tables']['rounds']['Row']
 
 async function autoLockExpiredRounds(rounds: Round[]) {
-  const expired = rounds.filter(
+  const hasExpired = rounds.some(
     (r) => !r.is_locked && r.deadline_at && new Date(r.deadline_at) <= new Date()
   )
-  if (!expired.length) return false
-  const { error } = await supabase
-    .from('rounds')
-    .update({ is_locked: true })
-    .in('id', expired.map((r) => r.id))
+  if (!hasExpired) return false
+  const { error } = await supabase.rpc('auto_lock_expired_rounds')
   if (error) console.error('Auto-lock failed:', error)
   return !error
 }
