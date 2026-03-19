@@ -49,7 +49,7 @@ export function LeaderboardWidget({ tournamentId, slug }: Props) {
                     : 'border-b border-gray-800/30'
                 }
               >
-                <td className="px-4 py-1.5 text-center">{rankDisplay(row.rank)}</td>
+                <td className="px-4 py-1.5 text-center">{rankDisplay(row.rank ?? 0)}</td>
                 <td className={`px-2 py-1.5 ${isMe ? 'font-medium text-brand' : 'text-gray-400'}`}>
                   {row.user_display_name}{isMe ? ' (you)' : ''}
                 </td>

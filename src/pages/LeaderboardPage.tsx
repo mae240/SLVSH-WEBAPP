@@ -91,7 +91,7 @@ export function LeaderboardPage() {
                         : 'border-b border-gray-800/30 hover:bg-gray-950/50'
                     }
                   >
-                    <td className="px-4 py-3 text-center">{rankDisplay(row.rank)}</td>
+                    <td className="px-4 py-3 text-center">{rankDisplay(row.rank ?? 0)}</td>
                     <td className={`px-4 py-3 ${isMe ? 'font-semibold text-brand' : 'text-gray-300'}`}>
                       {row.user_display_name}{isMe ? ' (you)' : ''}
                     </td>

@@ -43,7 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .eq('id', user!.id)
         .single()
       if (error) throw error
-      return data
+      return data as Profile
     },
     enabled: !!user,
   })

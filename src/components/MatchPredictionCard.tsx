@@ -66,7 +66,7 @@ export function MatchPredictionCard({
   }
 
   const scoreMap = new Map<string, ScoredPrediction>()
-  scoredPredictions?.forEach((sp) => scoreMap.set(sp.id, sp))
+  scoredPredictions?.forEach((sp) => { if (sp.id) scoreMap.set(sp.id, sp) })
 
   const allPredictions: PredictionWithProfile[] = []
   if (myPrediction) allPredictions.push(myPrediction)
@@ -178,8 +178,8 @@ export function MatchPredictionCard({
                 const isMe = p.user_id === userId
                 const scored = scoreMap.get(p.id)
                 const points = scored?.total_points ?? null
-                const winnerCorrect = scored ? scored.winner_points > 0 : null
-                const lettersCorrect = scored ? scored.letters_points > 0 : null
+                const winnerCorrect = scored ? (scored.winner_points ?? 0) > 0 : null
+                const lettersCorrect = scored ? (scored.letters_points ?? 0) > 0 : null
 
                 return (
                   <tr
