@@ -3,14 +3,8 @@ import { useTournament } from '@/hooks/useTournaments'
 import { useRounds } from '@/hooks/useRounds'
 import { useLeaderboard, useLeaderboardByRound } from '@/hooks/useLeaderboard'
 import { useAuth } from '@/hooks/useAuth'
+import { RankDisplay } from '@/components/RankDisplay'
 import { useState } from 'react'
-
-function rankDisplay(rank: number) {
-  if (rank === 1) return <span className="text-brand font-bold">#1</span>
-  if (rank === 2) return <span className="text-gray-300 font-bold">#2</span>
-  if (rank === 3) return <span className="text-yellow-600 font-bold">#3</span>
-  return <span className="text-gray-600">{rank}.</span>
-}
 
 export function LeaderboardPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -91,7 +85,7 @@ export function LeaderboardPage() {
                         : 'border-b border-gray-800/30 hover:bg-gray-950/50'
                     }
                   >
-                    <td className="px-4 py-3 text-center">{rankDisplay(row.rank ?? 0)}</td>
+                    <td className="px-4 py-3 text-center"><RankDisplay rank={row.rank ?? 0} /></td>
                     <td className={`px-4 py-3 ${isMe ? 'font-semibold text-brand' : 'text-gray-300'}`}>
                       {row.user_display_name}{isMe ? ' (you)' : ''}
                     </td>

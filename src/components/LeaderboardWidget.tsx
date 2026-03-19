@@ -1,17 +1,11 @@
 import { Link } from 'react-router-dom'
 import { useLeaderboard } from '@/hooks/useLeaderboard'
 import { useAuth } from '@/hooks/useAuth'
+import { RankDisplay } from './RankDisplay'
 
 interface Props {
   tournamentId: string
   slug: string
-}
-
-function rankDisplay(rank: number) {
-  if (rank === 1) return <span className="text-brand font-bold">#1</span>
-  if (rank === 2) return <span className="text-gray-300 font-bold">#2</span>
-  if (rank === 3) return <span className="text-yellow-600 font-bold">#3</span>
-  return <span className="text-sm text-gray-600">{rank}.</span>
 }
 
 export function LeaderboardWidget({ tournamentId, slug }: Props) {
@@ -49,7 +43,7 @@ export function LeaderboardWidget({ tournamentId, slug }: Props) {
                     : 'border-b border-gray-800/30'
                 }
               >
-                <td className="px-4 py-1.5 text-center">{rankDisplay(row.rank ?? 0)}</td>
+                <td className="px-4 py-1.5 text-center"><RankDisplay rank={row.rank ?? 0} /></td>
                 <td className={`px-2 py-1.5 ${isMe ? 'font-medium text-brand' : 'text-gray-400'}`}>
                   {row.user_display_name}{isMe ? ' (you)' : ''}
                 </td>
