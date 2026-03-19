@@ -32,8 +32,7 @@ export function RoundPage() {
   const isLocked = round.is_locked
   const isOpen = round.is_open
   const canEdit = isOpen && !isPast && !isLocked
-  const isAdmin = profile?.is_admin ?? false
-  const showOtherPredictions = isLocked || isAdmin
+  const showOtherPredictions = isLocked
 
   const predsByMatch = groupPredictionsByMatch(predictions ?? [])
 
