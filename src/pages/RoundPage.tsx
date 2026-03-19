@@ -32,7 +32,7 @@ export function RoundPage() {
   const isLocked = round.is_locked
   const isOpen = round.is_open
   const canEdit = isOpen && !isPast && !isLocked
-  const showOtherPredictions = isLocked
+  const showOtherPredictions = isLocked || isPast
 
   const predsByMatch = groupPredictionsByMatch(predictions ?? [])
 

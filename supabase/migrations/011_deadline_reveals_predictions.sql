@@ -1,23 +1,19 @@
 -- ============================================================
--- Auto-lock rounds when deadline passes + reveal predictions
+-- Reveal predictions after deadline passes (no pg_cron needed)
+-- Treat deadline_at <= now() as effectively locked for visibility
 -- ============================================================
 
--- 1) Function: lock all rounds whose deadline has passed
-CREATE OR REPLACE FUNCTION auto_lock_expired_rounds()
-RETURNS void LANGUAGE sql SECURITY DEFINER AS $$
-  UPDATE rounds
-  SET is_locked = true
-  WHERE is_locked = false
-    AND deadline_at IS NOT NULL
-    AND deadline_at <= now();
-$$;
+DROP POLICY "predictions: select visibility" ON predictions;
 
--- 2) Cron job: run every minute
-SELECT cron.schedule(
-  'auto-lock-expired-rounds',
-  '* * * * *',
-  $$ SELECT auto_lock_expired_rounds(); $$
-);
-
--- 3) No change needed to SELECT visibility policy —
---    it already checks is_locked, which the cron job now sets automatically.
+CREATE POLICY "predictions: select visibility"
+  ON predictions FOR SELECT
+  TO authenticated
+  USING (
+    user_id = auth.uid()
+    OR is_admin()
+    OR EXISTS (
+      SELECT 1 FROM rounds r
+      WHERE r.id = round_id
+        AND (r.is_locked = true OR (r.deadline_at IS NOT NULL AND r.deadline_at <= now()))
+    )
+  );
