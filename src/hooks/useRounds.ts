@@ -1,22 +1,28 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient, type QueryKey } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import type { Database } from '@/types/database'
 
 type Round = Database['public']['Tables']['rounds']['Row']
 
-async function autoLockExpiredRounds(rounds: Round[]) {
-  const hasExpired = rounds.some(
+function hasExpiredRounds(rounds: Round[]) {
+  return rounds.some(
     (r) => !r.is_locked && r.deadline_at && new Date(r.deadline_at) <= new Date()
   )
-  if (!hasExpired) return false
-  const { error } = await supabase.rpc('auto_lock_expired_rounds')
-  if (error) console.error('Auto-lock failed:', error)
-  return !error
+}
+
+function useAutoLock(rounds: Round[] | undefined, queryKey: QueryKey) {
+  const qc = useQueryClient()
+  useEffect(() => {
+    if (!rounds || !hasExpiredRounds(rounds)) return
+    supabase.rpc('auto_lock_expired_rounds').then(({ error }) => {
+      if (error) console.error('Auto-lock failed:', error)
+      else qc.invalidateQueries({ queryKey })
+    })
+  }, [rounds, queryKey, qc])
 }
 
 export function useRounds(tournamentId: string | undefined) {
-  const qc = useQueryClient()
   const query = useQuery({
     queryKey: ['rounds', tournamentId],
     queryFn: async () => {
@@ -31,18 +37,12 @@ export function useRounds(tournamentId: string | undefined) {
     enabled: !!tournamentId,
   })
 
-  useEffect(() => {
-    if (!query.data) return
-    autoLockExpiredRounds(query.data).then((locked) => {
-      if (locked) qc.invalidateQueries({ queryKey: ['rounds', tournamentId] })
-    })
-  }, [query.data, tournamentId, qc])
+  useAutoLock(query.data, ['rounds', tournamentId])
 
   return query
 }
 
 export function useRound(roundId: string | undefined) {
-  const qc = useQueryClient()
   const query = useQuery({
     queryKey: ['round', roundId],
     queryFn: async () => {
@@ -57,12 +57,7 @@ export function useRound(roundId: string | undefined) {
     enabled: !!roundId,
   })
 
-  useEffect(() => {
-    if (!query.data) return
-    autoLockExpiredRounds([query.data]).then((locked) => {
-      if (locked) qc.invalidateQueries({ queryKey: ['round', roundId] })
-    })
-  }, [query.data, roundId, qc])
+  useAutoLock(query.data ? [query.data] : undefined, ['round', roundId])
 
   return query
 }

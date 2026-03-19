@@ -109,7 +109,7 @@ export function MyPredictionsWidget({ tournamentId, slug, rounds }: Props) {
 
             const tippCount = roundPreds.length
             const matchCount = roundMatches.length
-            const isOpen = round.is_open && !round.is_locked && (!round.deadline_at || new Date(round.deadline_at) > new Date())
+            const isOpen = round.is_open && !round.is_locked
 
             return (
               <div key={round.id}>
