@@ -3,3 +3,6 @@ dist/
 .env.local
 .env.*.local
 *.tsbuildinfo
+.claude/
+CLAUDE.md
+supabase/.temp/
