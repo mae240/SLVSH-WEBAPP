@@ -13,6 +13,7 @@ for (const line of envContent.split('\n')) {
 
 const supabaseUrl = env['VITE_SUPABASE_URL']
 const serviceRoleKey = process.env['SUPABASE_SERVICE_ROLE_KEY']
+const seedPassword = process.env['SEED_PASSWORD'] || 'slvsh2026'
 
 if (!supabaseUrl || !serviceRoleKey) {
   console.error('Usage: SUPABASE_SERVICE_ROLE_KEY=... npx tsx scripts/seed.ts')
@@ -266,7 +267,7 @@ async function seed() {
     // Create auth user (trigger may fail — that's OK)
     const { data, error } = await supabase.auth.admin.createUser({
       email,
-      password: 'slvsh2026',
+      password: seedPassword,
       email_confirm: true,
     })
     if (error) {
@@ -407,8 +408,8 @@ async function seed() {
   }
 
   console.log(`\n✅ Fertig! ${inserted} Predictions eingefügt, ${skipped} übersprungen (existierten bereits)`)
-  console.log('\nAlle User-Passwörter: slvsh2026')
-  console.log('Login mit Benutzername (z.B. "anna") + Passwort "slvsh2026"')
+  console.log(`\nAlle User-Passwörter: ${seedPassword}`)
+  console.log(`Login mit Benutzername (z.B. "anna") + Passwort "${seedPassword}"`)
 }
 
 seed().catch(console.error)
