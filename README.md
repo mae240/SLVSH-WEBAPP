@@ -72,7 +72,10 @@ round locks:
   `SECURITY DEFINER` helpers. A follow-up (`013_view_security_invoker.sql`)
   switches the scoring/leaderboard views to `security_invoker` so they respect
   RLS, and adds a `WITH CHECK` to the prediction-update policy so predictions
-  cannot be moved into locked rounds.
+  cannot be moved into locked rounds. Object-level grants are explicit too
+  (`014_explicit_grants.sql`, tiered per role instead of relying on platform
+  defaults — RLS remains the row-level layer on top), so a fresh
+  `supabase db reset` + seed works out of the box.
 
 ## Architecture
 
