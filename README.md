@@ -35,7 +35,6 @@ round locks:
 - **Forms & validation:** React Hook Form + Zod
 - **Routing:** React Router v7
 - **Styling:** Tailwind CSS 3.4
-- **Utilities:** date-fns, clsx
 - **Deployment:** Vercel
 
 ## Features
@@ -173,18 +172,25 @@ Row Level Security.
 
 ### 3. Set up the database
 
-The repository does not ship a `supabase/config.toml`, so initialize and link
-the CLI to your project first, then push the migrations from
-`supabase/migrations/`:
+The repository ships a `supabase/config.toml`, so the local stack works out of
+the box (Docker required):
 
 ```bash
-supabase init      # only if no local Supabase config exists yet
-supabase link --project-ref your-project-id
-supabase db push
+npx supabase start      # start the local Supabase stack
+npx supabase db reset   # apply all migrations from supabase/migrations/
+npx supabase status     # shows the local API URL and anon key for .env.local
 ```
 
-Alternatively, run each migration file in `supabase/migrations/` in order via the
-Supabase SQL editor.
+Point `.env.local` at the values from `supabase status`
+(`VITE_SUPABASE_URL=http://127.0.0.1:54321` plus the printed anon key).
+
+To deploy against a hosted Supabase project instead, link the CLI and push the
+migrations:
+
+```bash
+npx supabase link --project-ref your-project-id
+npx supabase db push
+```
 
 ### 4. Run the development server
 
@@ -214,6 +220,8 @@ Demo users sign in with their username (e.g. their name), which is mapped to
 | `npm run dev`                     | Start the Vite development server                                           |
 | `npm run build`                   | Type-check and build for production                                        |
 | `npm run preview`                 | Preview the production build locally                                       |
+| `npm run lint`                    | ESLint (typescript-eslint + react-hooks)                                   |
+| `npm test`                        | Unit tests (Vitest)                                                        |
 | `npx tsx scripts/seed.ts`         | Seed demo data (needs `SUPABASE_SERVICE_ROLE_KEY` and `SEED_PASSWORD`)      |
 
 > The `scripts/` helpers use the service_role key and bypass RLS. Only run them
