@@ -73,7 +73,11 @@ round locks:
   cannot be moved into locked rounds. Object-level grants are explicit too
   (`014_explicit_grants.sql`, tiered per role instead of relying on platform
   defaults — RLS remains the row-level layer on top), so a fresh
-  `supabase db reset` + seed works out of the box.
+  `supabase db reset` + seed works out of the box. Finally,
+  `017_predictions_match_round_consistency.sql` couples `match_id`, `round_id`
+  and `tournament_id` via composite foreign keys, so the deadline/lock policies
+  (which check the client-supplied `round_id`) can no longer be bypassed by
+  pointing a prediction at a decided match while claiming an open round.
 
 ## Architecture
 
