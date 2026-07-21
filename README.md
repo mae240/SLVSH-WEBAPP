@@ -10,6 +10,24 @@ A prediction game for head-to-head ski tournaments. Users forecast the winner of
 each match and the winner's letter score, and compete on per-round and overall
 leaderboards.
 
+**[Live demo](https://slvsh-webapp-for-bets.vercel.app)**
+
+![Tournament overview](docs/screenshots/tournament.png)
+
+<details>
+<summary>More screenshots: scored round & login</summary>
+
+**Round view** — everyone's picks with per-match scoring, visible after the
+round locks:
+
+![Round view](docs/screenshots/round.png)
+
+**Login** — username + password (mapped to a synthetic email for Supabase Auth):
+
+![Login](docs/screenshots/login.png)
+
+</details>
+
 ## Tech Stack
 
 - **Frontend:** React 19, TypeScript 5.7, Vite 6
