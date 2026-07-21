@@ -13,10 +13,13 @@
 -- (roles anon / authenticated) from setting or changing is_admin.
 -- service_role (BYPASSRLS) and DB admins provision admins as before.
 
+-- NOTE: SECURITY INVOKER (the default) is essential here — the guard below
+-- relies on current_user being the *calling* role (anon / authenticated).
+-- A SECURITY DEFINER trigger would run as the function owner and the check
+-- would never fire, silently leaving the escalation open.
 create or replace function prevent_is_admin_change()
 returns trigger
 language plpgsql
-security definer
 set search_path = public
 as $$
 begin

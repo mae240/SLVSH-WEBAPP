@@ -48,7 +48,10 @@ leaderboards.
 - Overall and per-round leaderboards (backed by SQL views)
 - Admin area to manage tournaments, rounds, matches, results, and predictions
 - Role-based access enforced both in the UI and via Postgres Row Level Security
-  (an `is_admin()` helper drives the policies)
+  (an `is_admin()` helper drives the policies). A hardening migration
+  (`012_harden_rls.sql`) adds a trigger that stops users from self-granting
+  `is_admin`, tightens the profile-insert policy, and pins `search_path` on the
+  `SECURITY DEFINER` helpers.
 
 ## Architecture
 
