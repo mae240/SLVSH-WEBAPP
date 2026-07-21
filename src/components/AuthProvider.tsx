@@ -2,9 +2,15 @@ import { createContext, useEffect, useState, useCallback } from 'react'
 import type { User } from '@supabase/supabase-js'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import type { Database } from '@/types/database'
 
-type Profile = Database['public']['Tables']['profiles']['Row']
+// Kein Tabellen-Row-Typ: authenticated hat seit Migration 016 nur noch
+// Spalten-Grants auf id/display_name/created_at; is_admin kommt per RPC.
+export interface Profile {
+  id: string
+  display_name: string
+  created_at: string
+  is_admin: boolean
+}
 
 interface AuthContextValue {
   user: User | null
@@ -36,14 +42,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const { data: profile, isLoading: profileLoading } = useQuery({
     queryKey: ['profile', user?.id],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user!.id)
-        .single()
-      if (error) throw error
-      return data as Profile
+    queryFn: async (): Promise<Profile> => {
+      const [profileRes, adminRes] = await Promise.all([
+        supabase
+          .from('profiles')
+          .select('id, display_name, created_at')
+          .eq('id', user!.id)
+          .single(),
+        supabase.rpc('is_admin'),
+      ])
+      if (profileRes.error) throw profileRes.error
+      if (adminRes.error) throw adminRes.error
+      return { ...profileRes.data, is_admin: adminRes.data === true }
     },
     enabled: !!user,
   })
