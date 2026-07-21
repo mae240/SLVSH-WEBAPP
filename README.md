@@ -10,8 +10,6 @@ A prediction game for head-to-head ski tournaments. Users forecast the winner of
 each match and the winner's letter score, and compete on per-round and overall
 leaderboards.
 
-**[Live demo](https://slvsh-webapp-for-bets.vercel.app)**
-
 ![Tournament overview](docs/screenshots/tournament.png)
 
 <details>
