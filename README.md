@@ -10,8 +10,6 @@ A prediction game for head-to-head ski tournaments. Users forecast the winner of
 each match and the winner's letter score, and compete on per-round and overall
 leaderboards.
 
-<!-- TODO: screenshot/GIF -->
-
 ## Tech Stack
 
 - **Frontend:** React 19, TypeScript 5.7, Vite 6
