@@ -22,14 +22,15 @@ function formatTimeLeft(ms: number): string {
 
 export function Countdown({ deadline }: CountdownProps) {
   const [timeLeft, setTimeLeft] = useState(() => new Date(deadline).getTime() - Date.now())
+  const expired = timeLeft <= 0
 
   useEffect(() => {
-    if (timeLeft <= 0) return
+    if (expired) return
     const interval = setInterval(() => {
       setTimeLeft(new Date(deadline).getTime() - Date.now())
     }, 1000)
     return () => clearInterval(interval)
-  }, [deadline, timeLeft <= 0])
+  }, [deadline, expired])
 
   const isUrgent = timeLeft > 0 && timeLeft < 3600_000
 
