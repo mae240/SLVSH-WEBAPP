@@ -91,7 +91,28 @@ flowchart TB
     RLS -.->|"enforces access"| Tables
     SbAuth -.->|"auth.uid()"| RLS
 
-    Vercel["Vercel (SPA hosting,<br/>vercel.json rewrites)"] --- Client
+    Vercel["▲ Vercel (SPA hosting,<br/>vercel.json rewrites)"] --- Client
+
+    classDef front fill:#bfdbfe,stroke:#2563eb,color:#0b1324;
+    classDef auth fill:#fde68a,stroke:#d97706,color:#0b1324;
+    classDef data fill:#ddd6fe,stroke:#7c3aed,color:#0b1324;
+    classDef store fill:#99f6e4,stroke:#0d9488,color:#0b1324;
+    classDef api fill:#bbf7d0,stroke:#16a34a,color:#0b1324;
+    classDef sec fill:#fecaca,stroke:#dc2626,color:#0b1324;
+    classDef ext fill:#e5e7eb,stroke:#6b7280,color:#0b1324;
+
+    class Router,Hooks,SbClient,Login,Protected,Admin front;
+    class Auth,SbAuth auth;
+    class Tables data;
+    class Views store;
+    class RPC api;
+    class RLS sec;
+    class Vercel ext;
+
+    style Client fill:#eff6ff,stroke:#93c5fd,color:#0b1324;
+    style Routes fill:#f0f9ff,stroke:#bae6fd,color:#0b1324;
+    style Supabase fill:#f0fdf4,stroke:#86efac,color:#0b1324;
+    style DB fill:#faf5ff,stroke:#d8b4fe,color:#0b1324;
 ```
 
 ## Getting Started
