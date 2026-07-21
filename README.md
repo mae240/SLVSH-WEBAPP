@@ -51,7 +51,10 @@ leaderboards.
   (an `is_admin()` helper drives the policies). A hardening migration
   (`012_harden_rls.sql`) adds a trigger that stops users from self-granting
   `is_admin`, tightens the profile-insert policy, and pins `search_path` on the
-  `SECURITY DEFINER` helpers.
+  `SECURITY DEFINER` helpers. A follow-up (`013_view_security_invoker.sql`)
+  switches the scoring/leaderboard views to `security_invoker` so they respect
+  RLS, and adds a `WITH CHECK` to the prediction-update policy so predictions
+  cannot be moved into locked rounds.
 
 ## Architecture
 
