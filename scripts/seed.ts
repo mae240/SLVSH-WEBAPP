@@ -13,10 +13,10 @@ for (const line of envContent.split('\n')) {
 
 const supabaseUrl = env['VITE_SUPABASE_URL']
 const serviceRoleKey = process.env['SUPABASE_SERVICE_ROLE_KEY']
-const seedPassword = process.env['SEED_PASSWORD'] || 'slvsh2026'
+const seedPassword = process.env['SEED_PASSWORD']
 
-if (!supabaseUrl || !serviceRoleKey) {
-  console.error('Usage: SUPABASE_SERVICE_ROLE_KEY=... npx tsx scripts/seed.ts')
+if (!supabaseUrl || !serviceRoleKey || !seedPassword) {
+  console.error('Usage: SUPABASE_SERVICE_ROLE_KEY=... SEED_PASSWORD=... npx tsx scripts/seed.ts')
   console.error('Get the service_role key from: Supabase Dashboard → Settings → API')
   process.exit(1)
 }

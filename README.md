@@ -174,8 +174,7 @@ npm run dev
 `scripts/seed.ts` creates demo users, a sample tournament, rounds, matches, and
 predictions. It requires a **service_role** key (local use only — never commit
 it) and reads `VITE_SUPABASE_URL` from `.env.local`. The demo user password is
-taken from the optional `SEED_PASSWORD` environment variable (with a built-in
-fallback):
+taken from the required `SEED_PASSWORD` environment variable:
 
 ```bash
 SUPABASE_SERVICE_ROLE_KEY=... SEED_PASSWORD=your-demo-password \
@@ -192,8 +191,7 @@ Demo users sign in with their username (e.g. their name), which is mapped to
 | `npm run dev`                     | Start the Vite development server                                           |
 | `npm run build`                   | Type-check and build for production                                        |
 | `npm run preview`                 | Preview the production build locally                                       |
-| `npx tsx scripts/seed.ts`         | Seed demo data (needs `SUPABASE_SERVICE_ROLE_KEY`, optional `SEED_PASSWORD`) |
-| `npx tsx scripts/fix-henderson.ts`| One-off maintenance script to correct legacy match player names            |
+| `npx tsx scripts/seed.ts`         | Seed demo data (needs `SUPABASE_SERVICE_ROLE_KEY` and `SEED_PASSWORD`)      |
 
 > The `scripts/` helpers use the service_role key and bypass RLS. Only run them
 > locally against your own project.
@@ -208,7 +206,7 @@ src/
   lib/          Supabase client, React Query client, utilities (e.g. letter helpers)
   schemas/      Zod validation schemas
   types/        Shared TypeScript types (incl. generated Supabase types)
-scripts/        Node/tsx maintenance scripts (seeding, data fixes)
+scripts/        Node/tsx maintenance scripts (seeding)
 supabase/
   migrations/   PostgreSQL schema, views, functions, and RLS policies
 public/         Static assets
